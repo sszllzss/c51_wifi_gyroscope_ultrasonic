@@ -7,10 +7,12 @@
 [购买链接](https://detail.tmall.com/item.htm?spm=a230r.1.14.21.2f6c56e22jcJfI&id=557384797301&ns=1&abbucket=9)
 ### WIFI模块（ESP-01或者ESP-01S使用其中一种就可以）
 - ESP-01
+
 ![](doc/img/20191018085808325.png)
 ![](doc/img/20191018090048392.png)![](doc/img/20191018090102872.png)
 
 [购买链接](https://item.taobao.com/item.htm?spm=a1z10.5-c.w4002-16491566042.32.39426b051rhAKU&id=543546250892)
+
 接线图（其中两个电阻选择200欧左右的）
 ![](doc/img/es01dl.png)
 
