@@ -49,6 +49,7 @@
 
 ## 配置ESP-01/ESP-01S模块波特率（出厂默认115200）
 - 连接ESP模块到TTL-USB模块（注意：ESP-01S可以不需要把RTS和CH_PD接到3.3V上）
+
 ![](doc/img/usbttl.png)
 
 [购买链接](https://detail.tmall.com/item.htm?id=525204252260&ali_refid=a3_430582_1006:1104520036:N:cTt8VXogGknfV8yQ5Cjk3g==:5d74647c728497da47d886380f9a88c6&ali_trackid=1_5d74647c728497da47d886380f9a88c6&spm=a230r.1.14.1&skuId=3947839671633)
@@ -64,6 +65,7 @@ TTL模块->ESP模块
 ```
 
 - 连接电脑安装驱动（[tools/ch341ser.exe](tools/ch341ser.exe)）
+
 ![](doc/img/usb_ttl.png)
 
 - 使用串口工具`tools\串口调试工具\sscom5.13.1.exe`发送指令(要输入回车表示命令结束)
