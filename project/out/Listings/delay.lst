@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   DELAY                                                             03/06/2021 23:21:39 PAGE 1   
+C51 COMPILER V9.59.0.0   DELAY                                                             03/07/2021 19:02:47 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DELAY
@@ -11,94 +11,142 @@ line level    source
    1          #include        "delay.h"
    2          #include        "timer.h"
    3          
-   4          static uint32_t delay_ms_tick_cnt = 0;
-   5          static uint16_t delay_TIM_Value = 0;
-   6          //========================================================================
-   7          // 函数: void  delay_ms(uint8_t ms)
-   8          // 描述: 延时函数。
-   9          // 参数: ms,要延时的ms数, 这里只支持1~255ms. 自动适应主时钟.
-  10          // 返回: none.
-  11          // 备注: 
-  12          //========================================================================
-  13          void  delay_ms_while(uint8_t ms)
-  14          {
-  15   1           unsigned int i;
-  16   1               do{
-  17   2                    i = MAIN_Fosc / 13000;
-  18   2                        while(--i)    ;   //14T per loop
-  19   2           }while(--ms);
-  20   1      }
-  21          void  delay_ms(uint16_t ms)
-  22          {
-  23   1          uint16_t time_bk = Timer_Get_Value(TIM0);
-  24   1          uint32_t delay_ms_tick_cnt_bk = delay_ms_tick_cnt;
-  25   1          if(0xFFFFFFFF-delay_ms_tick_cnt_bk <= ms)
-  26   1          {
-  27   2              while(delay_ms_tick_cnt<delay_ms_tick_cnt_bk+ms);
-  28   2          }
-  29   1          else
-  30   1          {
-  31   2              uint32_t while_cnt = ms - (0xFFFFFFFF-delay_ms_tick_cnt);
-  32   2              while(delay_ms_tick_cnt>delay_ms_tick_cnt_bk);
-  33   2              while(delay_ms_tick_cnt<while_cnt);
-  34   2          }
-  35   1          while(Timer_Get_Value(TIM0)<time_bk);
-  36   1      }
-  37          //us 只能是1~999
-  38          void  delay_us(uint16_t us)
-  39          {
-  40   1          uint16_t time_bk;
-  41   1          uint32_t delay_ms_tick_cnt_bk,while_cnt;
-  42   1          if(us<=0 || us>999) return;
-  43   1          time_bk = Timer_Get_Value(TIM0);
-  44   1          delay_ms_tick_cnt_bk = delay_ms_tick_cnt;
-  45   1          while_cnt =  ((MAIN_Fosc/1000000UL)*us);
-  46   1          if((MAIN_Fosc/1000) - (time_bk-delay_TIM_Value) >= while_cnt)
-  47   1          {
-  48   2              
-  49   2              while(Timer_Get_Value(TIM0) - time_bk < while_cnt);
-  50   2          }
-  51   1          else
-  52   1          {
-  53   2              while_cnt = while_cnt - ((MAIN_Fosc/1000) - (time_bk-delay_TIM_Value));
-  54   2              while(delay_ms_tick_cnt==delay_ms_tick_cnt_bk);
-C51 COMPILER V9.59.0.0   DELAY                                                             03/06/2021 23:21:39 PAGE 2   
+   4          
+   5          static delay_timer_hook_t xdata timer_hook[DELAY_TIMER_HOOK_SIZE];
+   6          static uint8_t timer_hook_pointer = 0;
+   7          static uint32_t delay_ms_tick_cnt = 0;
+   8          static uint16_t delay_TIM_Value = 0;
+   9          //========================================================================
+  10          // 函数: void  delay_ms(uint8_t ms)
+  11          // 描述: 延时函数。
+  12          // 参数: ms,要延时的ms数, 这里只支持1~255ms. 自动适应主时钟.
+  13          // 返回: none.
+  14          // 备注: 
+  15          //========================================================================
+  16          void  delay_ms_while(uint8_t ms)
+  17          {
+  18   1           unsigned int i;
+  19   1               do{
+  20   2                    i = MAIN_Fosc / 13000;
+  21   2                        while(--i)    ;   //14T per loop
+  22   2           }while(--ms);
+  23   1      }
+  24          void  delay_ms(uint16_t ms)
+  25          {
+  26   1          uint16_t time_bk = Timer_Get_Value(TIM0);
+  27   1          uint32_t delay_ms_tick_cnt_bk = delay_ms_tick_cnt;
+  28   1          if(0xFFFFFFFF-delay_ms_tick_cnt_bk <= ms)
+  29   1          {
+  30   2              while(delay_ms_tick_cnt<delay_ms_tick_cnt_bk+ms);
+  31   2          }
+  32   1          else
+  33   1          {
+  34   2              uint32_t while_cnt = ms - (0xFFFFFFFF-delay_ms_tick_cnt);
+  35   2              while(delay_ms_tick_cnt>delay_ms_tick_cnt_bk);
+  36   2              while(delay_ms_tick_cnt<while_cnt);
+  37   2          }
+  38   1          while(Timer_Get_Value(TIM0)<time_bk);
+  39   1      }
+  40          //us 只能是1~999
+  41          void  delay_us(uint16_t us)
+  42          {
+  43   1          uint16_t time_bk;
+  44   1          uint32_t delay_ms_tick_cnt_bk,while_cnt;
+  45   1          if(us<=0 || us>999) return;
+  46   1          time_bk = Timer_Get_Value(TIM0);
+  47   1          delay_ms_tick_cnt_bk = delay_ms_tick_cnt;
+  48   1          while_cnt =  ((MAIN_Fosc/1000000UL)*us);
+  49   1          if((MAIN_Fosc/1000) - (time_bk-delay_TIM_Value) >= while_cnt)
+  50   1          {
+  51   2              
+  52   2              while(Timer_Get_Value(TIM0) - time_bk < while_cnt);
+  53   2          }
+  54   1          else
+C51 COMPILER V9.59.0.0   DELAY                                                             03/07/2021 19:02:47 PAGE 2   
 
-  55   2              while(Timer_Get_Value(TIM0) < while_cnt);
-  56   2          }
-  57   1      }
-  58          uint32_t delay_get_tick()
-  59          {
-  60   1          return delay_ms_tick_cnt;
-  61   1      }
-  62          static void delay_Timerout_Callback()//1ms进入一次中断
-  63          {
-  64   1      
-  65   1          delay_ms_tick_cnt++;
-  66   1          
-  67   1      }
-  68          void delay_init(void)
-  69          {
-  70   1          TIM_InitTypeDef def;
-  71   1          def.TIM_Mode = TIM_16BitAutoReloadNoMask;//16位自动重装, 不可屏蔽中断
-  72   1          def.TIM_Polity = PolityHigh;//高优先级
-  73   1          def.TIM_Interrupt = ENABLE;//打开中断
-  74   1          def.TIM_ClkSource=TIM_CLOCK_1T;//1T定时器
-  75   1          def.TIM_ClkOut =  DISABLE;//关闭输出
-  76   1          def.TIM_Timerout_Callback = delay_Timerout_Callback;
-  77   1          delay_TIM_Value = def.TIM_Value = 0XFFFF - (MAIN_Fosc/1000);
-  78   1          def.TIM_Run = ENABLE;//开始运行
-  79   1          Timer_Inilize(TIM0,&def);
-  80   1          
-  81   1      }
+  55   1          {
+  56   2              while_cnt = while_cnt - ((MAIN_Fosc/1000) - (time_bk-delay_TIM_Value));
+  57   2              while(delay_ms_tick_cnt==delay_ms_tick_cnt_bk);
+  58   2              while(Timer_Get_Value(TIM0) < while_cnt);
+  59   2          }
+  60   1      }
+  61          uint32_t delay_get_tick()
+  62          {
+  63   1          return delay_ms_tick_cnt;
+  64   1      }
+  65          static void delay_Timerout_Callback()//1ms进入一次中断
+  66          {
+  67   1          uint8_t i;
+  68   1          delay_ms_tick_cnt++;
+  69   1          if(timer_hook_pointer>0)
+  70   1          {
+  71   2              for(i=0;i<timer_hook_pointer;i++)
+  72   2              {
+  73   3                  timer_hook[i]();
+  74   3              }
+  75   2          }
+  76   1          
+  77   1      }
+  78          void delay_init(void)
+  79          {
+  80   1          TIM_InitTypeDef def;
+  81   1          def.TIM_Mode = TIM_16BitAutoReloadNoMask;//16位自动重装, 不可屏蔽中断
+  82   1          def.TIM_Polity = PolityHigh;//高优先级
+  83   1          def.TIM_Interrupt = ENABLE;//打开中断
+  84   1          def.TIM_ClkSource=TIM_CLOCK_1T;//1T定时器
+  85   1          def.TIM_ClkOut =  DISABLE;//关闭输出
+  86   1          def.TIM_Timerout_Callback = delay_Timerout_Callback;
+  87   1          delay_TIM_Value = def.TIM_Value = 0XFFFF - (MAIN_Fosc/1000);
+  88   1          def.TIM_Run = ENABLE;//开始运行
+  89   1          Timer_Inilize(TIM0,&def);
+  90   1          
+  91   1      }
+  92          
+  93          int8_t delay_add_hook(delay_timer_hook_t hook)
+  94          {
+  95   1          if(timer_hook_pointer<DELAY_TIMER_HOOK_SIZE)
+  96   1          {
+  97   2              timer_hook[timer_hook_pointer] = hook;
+  98   2              timer_hook_pointer++;
+  99   2              return 0;
+ 100   2          }
+ 101   1          return -1;
+ 102   1      }
+ 103          void delay_del_hook(delay_timer_hook_t hook)
+ 104          {
+ 105   1          uint8_t i=0;
+ 106   1          if(timer_hook_pointer>0)
+ 107   1          {
+ 108   2              for(i=0;i<timer_hook_pointer;i++)
+ 109   2              {
+ 110   3                  if(timer_hook[i] == hook)
+ 111   3                  {
+ 112   4                      break;
+ 113   4                  }
+ 114   3              }
+ 115   2              if(i==timer_hook_pointer)
+ 116   2              {
+C51 COMPILER V9.59.0.0   DELAY                                                             03/07/2021 19:02:47 PAGE 3   
+
+ 117   3                  return;
+ 118   3              }
+ 119   2              for(;i<timer_hook_pointer-1;i++)
+ 120   2              {
+ 121   3                  timer_hook[i] = timer_hook[i+1];
+ 122   3      
+ 123   3              }
+ 124   2              timer_hook_pointer--;
+ 125   2          }
+ 126   1      }
+ 127          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    398    ----
+   CODE SIZE        =    624    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----    ----
+   XDATA SIZE       =     12    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      4      25
+   DATA SIZE        =      5      29
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

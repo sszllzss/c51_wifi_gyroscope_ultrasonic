@@ -19,6 +19,9 @@
 #define DEBUG_PRINTF_UART1_SW_P36_P37
 //#define DEBUG_PRINTF_UART1_SW_P16_P17
 
+
+#define DELAY_TIMER_HOOK_SIZE 4
+
 #define USING_UART1//¿ªÆô´®¿Ú1
 #define	COM_TX1_Lenth	128
 #define	COM_RX1_Lenth	128

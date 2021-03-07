@@ -1,23 +1,8 @@
 
 #include "usart.h"
+#include	"delay.h"
 
 
-
-static COMx_Define	Uartx_config[]=
-{
-    #ifdef USING_UART1
-        {1,0,0,0,0,0,0},
-    #endif
-    #ifdef USING_UART2
-        {2,0,0,0,0,0,0},
-    #endif
-    #ifdef USING_UART3
-        {3,0,0,0,0,0,0},
-    #endif
-    #ifdef USING_UART4
-        {4,0,0,0,0,0,0},
-    #endif
-};
 
 
 
@@ -38,19 +23,77 @@ static uint8_t	xdata TX4_Buffer[COM_TX4_Lenth];	//发送缓冲
 static uint8_t 	xdata RX4_Buffer[COM_RX4_Lenth];	//接收缓冲
 #endif
 
-uint8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
+static uint8_t xdata  uart_init = 0;
+
+
+static COMx_Define xdata Uartx_config[]=
+{
+    #ifdef USING_UART1
+        {1,RX1_Buffer,TX1_Buffer,COM_RX1_Lenth,COM_TX1_Lenth,0,0,0,0,0,0,0},
+    #endif
+    #ifdef USING_UART2
+        {2,RX2_Buffer,TX2_Buffer,COM_RX2_Lenth,COM_TX2_Lenth,0,0,0,0,0,0,0},
+    #endif
+    #ifdef USING_UART3
+        {3,RX3_Buffer,TX3_Buffer,COM_RX3_Lenth,COM_TX3_Lenth,0,0,0,0,0,0,0},
+    #endif
+    #ifdef USING_UART4
+        {4,RX4_Buffer,TX4_Buffer,COM_RX4_Lenth,COM_TX4_Lenth,0,0,0,0,0,0,0},
+    #endif
+};
+
+static void USART_Hook()
+{
+    uint8_t i;
+    for(i=0;i<sizeof(Uartx_config)/sizeof(Uartx_config[0]);i++)
+    {
+        if(Uartx_config[i].RX_TimeOut > 0)
+        {
+            Uartx_config[i].RX_TimeOut--;
+            if(Uartx_config[i].RX_TimeOut==0)
+            {
+                if(Uartx_config[i].timer_out_cb)
+                {
+                    Uartx_config[i].timer_out_cb();
+                }
+            }
+        }
+    }
+}
+void USART_Set_rx_timer_out_cb(uint8_t UARTx, usart_rx_timer_out_cb_t timer_out_cb,uint8_t RX_TimeOut)//设置超时通知回调
+{
+    Uartx_config[UARTx].timer_out_cb = timer_out_cb;
+    Uartx_config[UARTx].RX_TimeOut = RX_TimeOut;
+}
+int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 {
 	uint8_t	i;
 	uint32_t	j;
+    
+    Uartx_config[UARTx].TX_read = 0;
+    Uartx_config[UARTx].TX_write = 0;
+    Uartx_config[UARTx].B_TX_busy = 0;
+    Uartx_config[UARTx].RX_Front = 0;
+    Uartx_config[UARTx].RX_Rear = 0;
+    Uartx_config[UARTx].RX_RxCnt = 0;
+    Uartx_config[UARTx].timer_out_cb = NULL;
+    if(COMx->RX_TimeOut == 0)
+    {
+        Uartx_config[UARTx].RX_TimeOut = 0;
+    }
+    else
+    {
+        Uartx_config[UARTx].RX_TimeOut = COMx->RX_TimeOut;
+    }
+    if(uart_init==0)
+    {
+        delay_add_hook(USART_Hook);
+        uart_init = 1;
+    }
 #ifdef USING_UART1
 	if(UARTx == USART1)
 	{
-        Uartx_config[UARTx].TX_read = 0;
-        Uartx_config[UARTx].TX_write = 0;
-        Uartx_config[UARTx].B_TX_busy = 0;
-        Uartx_config[UARTx].RX_Cnt = 0;
-        Uartx_config[UARTx].RX_TimeOut = 0;
-        Uartx_config[UARTx].B_RX_OK = 0;
+
 		for(i=0; i<COM_TX1_Lenth; i++)	TX1_Buffer[i] = 0;
 		for(i=0; i<COM_RX1_Lenth; i++)	RX1_Buffer[i] = 0;
 
@@ -121,12 +164,7 @@ uint8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 #ifdef USING_UART2
 	if(UARTx == USART2)
 	{
-        Uartx_config[UARTx].TX_read = 0;
-        Uartx_config[UARTx].TX_write = 0;
-        Uartx_config[UARTx].B_TX_busy = 0;
-        Uartx_config[UARTx].RX_Cnt = 0;
-        Uartx_config[UARTx].RX_TimeOut = 0;
-        Uartx_config[UARTx].B_RX_OK = 0;
+
 		for(i=0; i<COM_TX2_Lenth; i++)	TX2_Buffer[i] = 0;
 		for(i=0; i<COM_RX2_Lenth; i++)	RX2_Buffer[i] = 0;
 
@@ -139,7 +177,7 @@ uint8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 			j = (MAIN_Fosc / 4) / COMx->UART_BaudRate;	//按1T计算
 			if(j >= 65536UL)	return 2;	//错误
 			j = 65536UL - j;
-            if(COMx->UART_BRT_Use != TimeOutSet2) return 2;	//模式错误
+            if(COMx->UART_BRT_Use != BRT_Timer2) return 2;	//模式错误
 			AUXR &= ~(1<<4);	//Timer stop
 			AUXR &= ~(1<<3);	//Timer2 set As Timer
 			AUXR |=  (1<<2);	//Timer2 set as 1T mode
@@ -161,12 +199,7 @@ uint8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 #ifdef USING_UART3
 	if(UARTx == USART3)
 	{
-        Uartx_config[UARTx].TX_read = 0;
-        Uartx_config[UARTx].TX_write = 0;
-        Uartx_config[UARTx].B_TX_busy = 0;
-        Uartx_config[UARTx].RX_Cnt = 0;
-        Uartx_config[UARTx].RX_TimeOut = 0;
-        Uartx_config[UARTx].B_RX_OK = 0;
+
 		for(i=0; i<COM_TX3_Lenth; i++)	TX3_Buffer[i] = 0;
 		for(i=0; i<COM_RX3_Lenth; i++)	RX3_Buffer[i] = 0;
 
@@ -219,12 +252,7 @@ uint8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 #ifdef USING_UART4
 	if(UARTx == USART4)
 	{
-        Uartx_config[UARTx].TX_read = 0;
-        Uartx_config[UARTx].TX_write = 0;
-        Uartx_config[UARTx].B_TX_busy = 0;
-        Uartx_config[UARTx].RX_Cnt = 0;
-        Uartx_config[UARTx].RX_TimeOut = 0;
-        Uartx_config[UARTx].B_RX_OK = 0;
+
 		for(i=0; i<COM_TX4_Lenth; i++)	TX4_Buffer[i] = 0;
 		for(i=0; i<COM_RX4_Lenth; i++)	RX4_Buffer[i] = 0;
 
@@ -349,7 +377,100 @@ void UARTx_writebuff(enum USARTx com, uint8_t dat)	//写入发送缓冲，指针+1
 	if(Uartx_config[com].id == 4)	TX4_write2buff(dat);
     #endif
 }
+uint8_t UARTx_ReadRxLen(enum USARTx com)
+{
+    return Uartx_config[com].RX_RxCnt;
+}
+int8_t UARTx_ReadRxChar(enum USARTx com,uint8_t *dat)
+{
+    if(Uartx_config[com].RX_Front != Uartx_config[com].RX_Rear)
+    {
+        *dat = Uartx_config[com].Rx_buff[Uartx_config[com].RX_Front];
+        Uartx_config[com].RX_Front = (Uartx_config[com].RX_Front+1)%Uartx_config[com].RX_BuffLen;
+        Uartx_config[com].RX_RxCnt--;
+        return 0;
+    }
+    return  -1;
+    
+}
+int8_t UARTx_CheckRxChar(enum USARTx com,uint8_t *dat)//并不从队列里取出数据只是查看一下数据
+{
+    if(Uartx_config[com].RX_Front != Uartx_config[com].RX_Rear)
+    {
+        *dat = Uartx_config[com].Rx_buff[Uartx_config[com].RX_Front];
+        return 0;
+    }
 
+    return  -1;
+    
+}
+
+
+int8_t UARTx_CheckPosRxBuff(enum USARTx com,uint8_t pos,uint8_t *buff,uint8_t len)//并不从队列里取出数据只是查看一下数据
+{
+    uint8_t i=0;
+
+    if(Uartx_config[com].RX_RxCnt <= 0 || len <= 0 || (pos+len) > Uartx_config[com].RX_RxCnt)
+    {
+        return -1;
+    }
+    if((Uartx_config[com].RX_Front + pos + len ) / (Uartx_config[com].RX_BuffLen) >= 1)
+    {
+        if((Uartx_config[com].RX_Front + pos) / (Uartx_config[com].RX_BuffLen) >= 1)
+        {
+            for(i=0;i<len;i++)
+            {
+                buff[i] = Uartx_config[com].Rx_buff[(Uartx_config[com].RX_Front + pos)%(Uartx_config[com].RX_BuffLen) + i];
+            }
+        }
+        else
+        {
+
+            for(i=0;i<Uartx_config[com].RX_BuffLen - (Uartx_config[com].RX_Front + pos);i++)
+            {
+                buff[i] = Uartx_config[com].Rx_buff[(Uartx_config[com].RX_Front + pos) + i];
+            }
+            for(i=0;i<(Uartx_config[com].RX_Front + pos + len)%Uartx_config[com].RX_BuffLen;i++)
+            {
+                buff[Uartx_config[com].RX_BuffLen - (Uartx_config[com].RX_Front + pos) + i] = Uartx_config[com].Rx_buff[i];
+            }
+        }
+
+        
+    }
+    else
+    {
+        for(i=0;i<len;i++)
+        {
+            buff[i] = Uartx_config[com].Rx_buff[Uartx_config[com].RX_Front+pos+i];
+        }
+    }
+    return 0;  
+}
+int8_t UARTx_CheckRxBuff(enum USARTx com,uint8_t *buff,uint8_t len)//并不从队列里取出数据只是查看一下数据
+{
+    uint8_t i=0;
+    if(Uartx_config[com].RX_RxCnt <=len)
+    {
+        for(i=0;i<len;i++)
+        {
+            buff[i] = Uartx_config[com].Rx_buff[(Uartx_config[com].RX_Front + i)%(Uartx_config[com].RX_BuffLen)];
+        }
+        return 0;
+    }
+    return -1;
+}
+int8_t UARTx_RemoveRxBuff(enum USARTx com,uint8_t len)
+{
+    if(Uartx_config[com].RX_RxCnt <=len)
+    {
+        Uartx_config[com].RX_Front = (Uartx_config[com].RX_Front + len) % (Uartx_config[com].RX_BuffLen);
+        Uartx_config[com].RX_RxCnt=Uartx_config[com].RX_RxCnt-len;
+        return 0;
+    }
+    return -1;
+    
+}
 void PrintString(enum USARTx com, uint8_t *puts)
 {
     for (; *puts != 0;	puts++)  UARTx_writebuff(com,*puts); 	//遇到停止符0结束
@@ -363,12 +484,17 @@ void UART1_int (void) interrupt UART1_VECTOR
 	if(RI)
 	{
 		RI = 0;
-		if(Uartx_config[USART1].B_RX_OK == 0)
+        if(((Uartx_config[USART1].RX_Rear+1) % COM_RX1_Lenth) != Uartx_config[USART1].RX_Front)//队列没有满
 		{
-			if(Uartx_config[USART1].RX_Cnt >= COM_RX1_Lenth)	Uartx_config[USART1].RX_Cnt = 0;
-			RX1_Buffer[Uartx_config[USART1].RX_Cnt++] = SBUF;
-			Uartx_config[USART1].RX_TimeOut = TimeOutSet1;
+			RX1_Buffer[Uartx_config[USART1].RX_Rear] = SBUF;
+            Uartx_config[USART1].RX_RxCnt++;
+            Uartx_config[USART1].RX_Rear =(Uartx_config[USART1].RX_Rear +1) % COM_RX1_Lenth;
+			Uartx_config[USART1].RX_TimeOut = Uartx_config[USART1].RX_TimeOut;;
 		}
+        else if(Uartx_config[USART1].timer_out_cb)
+        {
+            Uartx_config[USART1].timer_out_cb();
+        }
 	}
 
 	if(TI)
@@ -390,12 +516,17 @@ void UART2_int (void) interrupt UART2_VECTOR
 	if((S2CON & 1) != 0)
 	{
 		S2CON &= ~1;
-		if(Uartx_config[USART2].B_RX_OK == 0)
+        if(((Uartx_config[USART2].RX_Rear+1) % COM_RX2_Lenth) != Uartx_config[USART2].RX_Front)//队列没有满
 		{
-			if(Uartx_config[USART2].RX_Cnt >= COM_RX2_Lenth)	Uartx_config[USART2].RX_Cnt = 0;
-			RX2_Buffer[Uartx_config[USART2].RX_Cnt++] = S2BUF;
-			Uartx_config[USART2].RX_TimeOut = TimeOutSet2;
+			RX2_Buffer[Uartx_config[USART2].RX_Rear] = S2BUF;
+            Uartx_config[USART2].RX_RxCnt++;
+            Uartx_config[USART2].RX_Rear =(Uartx_config[USART2].RX_Rear +1) % COM_RX2_Lenth;
+			Uartx_config[USART2].RX_TimeOut = Uartx_config[USART2].RX_TimeOut;
 		}
+        else if(Uartx_config[USART2].timer_out_cb)
+        {
+            Uartx_config[USART2].timer_out_cb();
+        }
 	}
 
 	if((S2CON & 2) != 0)
@@ -418,12 +549,17 @@ void UART3_int (void) interrupt UART3_VECTOR
 	if((S3CON & 1) != 0)
 	{
 		S3CON &= ~1;
-		if(Uartx_config[USART3].B_RX_OK == 0)
+        if(((Uartx_config[USART3].RX_Rear+1) % COM_RX3_Lenth) != Uartx_config[USART3].RX_Front)//队列没有满
 		{
-			if(Uartx_config[USART3].RX_Cnt >= COM_RX3_Lenth)	Uartx_config[USART3].RX_Cnt = 0;
-			RX3_Buffer[Uartx_config[USART3].RX_Cnt++] = S3BUF;
-			Uartx_config[USART3].RX_TimeOut = TimeOutSet3;
+			RX3_Buffer[Uartx_config[USART3].RX_Rear] = S3BUF;
+            Uartx_config[USART3].RX_RxCnt++;
+            Uartx_config[USART3].RX_Rear =(Uartx_config[USART3].RX_Rear +1) % COM_RX3_Lenth;
+			Uartx_config[USART3].RX_TimeOut = Uartx_config[USART3].RX_TimeOut;
 		}
+        else if(Uartx_config[USART3].timer_out_cb)
+        {
+            Uartx_config[USART3].timer_out_cb();
+        }
 	}
 
 	if((S3CON & 2) != 0)
@@ -445,12 +581,17 @@ void UART4_int (void) interrupt UART4_VECTOR
 	if((S4CON & 1) != 0)
 	{
 		S4CON &= ~1;
-		if(Uartx_config[USART4].B_RX_OK == 0)
+        if(((Uartx_config[USART4].RX_Rear+1) % COM_RX4_Lenth) != Uartx_config[USART4].RX_Front)//队列没有满
 		{
-			if(Uartx_config[USART4].RX_Cnt >= COM_RX4_Lenth)	Uartx_config[USART4].RX_Cnt = 0;
-			RX4_Buffer[Uartx_config[USART4].RX_Cnt++] = S4BUF;
-			Uartx_config[USART4].RX_TimeOut = TimeOutSet4;
+			RX4_Buffer[Uartx_config[USART4].RX_Rear] = S4BUF;
+            Uartx_config[USART4].RX_RxCnt++;
+            Uartx_config[USART4].RX_Rear =(Uartx_config[USART4].RX_Rear +1) % COM_RX4_Lenth;
+			Uartx_config[USART4].RX_TimeOut = Uartx_config[USART4].RX_TimeOut;
 		}
+        else if(Uartx_config[USART4].timer_out_cb)
+        {
+            Uartx_config[USART4].timer_out_cb();
+        }
 	}
 
 	if((S4CON & 2) != 0)

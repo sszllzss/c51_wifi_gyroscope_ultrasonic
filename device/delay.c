@@ -1,6 +1,9 @@
 #include	"delay.h"
 #include	"timer.h"
 
+
+static delay_timer_hook_t xdata timer_hook[DELAY_TIMER_HOOK_SIZE];
+static uint8_t timer_hook_pointer = 0;
 static uint32_t delay_ms_tick_cnt = 0;
 static uint16_t delay_TIM_Value = 0;
 //========================================================================
@@ -61,8 +64,15 @@ uint32_t delay_get_tick()
 }
 static void delay_Timerout_Callback()//1ms进入一次中断
 {
-
+    uint8_t i;
     delay_ms_tick_cnt++;
+    if(timer_hook_pointer>0)
+    {
+        for(i=0;i<timer_hook_pointer;i++)
+        {
+            timer_hook[i]();
+        }
+    }
     
 }
 void delay_init(void)
@@ -79,3 +89,39 @@ void delay_init(void)
     Timer_Inilize(TIM0,&def);
     
 }
+
+int8_t delay_add_hook(delay_timer_hook_t hook)
+{
+    if(timer_hook_pointer<DELAY_TIMER_HOOK_SIZE)
+    {
+        timer_hook[timer_hook_pointer] = hook;
+        timer_hook_pointer++;
+        return 0;
+    }
+    return -1;
+}
+void delay_del_hook(delay_timer_hook_t hook)
+{
+    uint8_t i=0;
+    if(timer_hook_pointer>0)
+    {
+        for(i=0;i<timer_hook_pointer;i++)
+        {
+            if(timer_hook[i] == hook)
+            {
+                break;
+            }
+        }
+        if(i==timer_hook_pointer)
+        {
+            return;
+        }
+        for(;i<timer_hook_pointer-1;i++)
+        {
+            timer_hook[i] = timer_hook[i+1];
+
+        }
+        timer_hook_pointer--;
+    }
+}
+

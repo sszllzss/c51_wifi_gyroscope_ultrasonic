@@ -39,27 +39,30 @@ enum USARTx
 
 
 
-#define	TimeOutSet1		5
-#define	TimeOutSet2		5
-#define	TimeOutSet3		5
-#define	TimeOutSet4		5
+#define	DefaultTimeOutSet		5
 
 #define	BRT_Timer1	1//USART1 
 #define	BRT_Timer2	2//USART2 USART3 USART4
 #define	BRT_Timer3	3//USART3
 #define	BRT_Timer4	4//USART4
 
+typedef void((*usart_rx_timer_out_cb_t)(void));
+
 typedef struct
 { 
 	uint8_t	id;				//串口号
-
+    uint8_t * Rx_buff;
+    uint8_t * Tx_buff;
+    uint8_t RX_BuffLen;//接收队列长度
+    uint8_t TX_BuffLen;//发送队列长度
 	uint8_t	TX_read;		//发送读指针
 	uint8_t	TX_write;		//发送写指针
 	uint8_t	B_TX_busy;		//忙标志
-
-	uint8_t 	RX_Cnt;			//接收字节计数
+    uint8_t RX_RxCnt;			//接收计数
+	uint8_t RX_Front;			//队头
+    uint8_t RX_Rear;			//队尾
 	uint8_t	RX_TimeOut;		//接收超时
-	uint8_t	B_RX_OK;		//接收块完成
+    usart_rx_timer_out_cb_t timer_out_cb;//接收超时与缓存满回调
 } COMx_Define; 
 
 typedef struct
@@ -70,16 +73,25 @@ typedef struct
 	uint8_t	Morecommunicate;	//多机通讯允许, ENABLE,DISABLE
 	uint8_t	UART_RxEnable;		//允许接收,   ENABLE,DISABLE
 	uint8_t	BaudRateDouble;		//波特率加倍, ENABLE,DISABLE
-	uint8_t	UART_Interrupt;		//中断控制,   ENABLE,DISABLE
+	uint8_t	UART_Interrupt;		//中断控制,   ENABLE,DISABLE 
 	uint8_t	UART_Polity;		//优先级,     PolityLow,PolityHigh
 	uint8_t	UART_P_SW;			//切换端口,   UART1_SW_P30_P31,UART1_SW_P36_P37,UART1_SW_P16_P17(必须使用内部时钟)
-	uint8_t	UART_RXD_TXD_Short;	//内部短路RXD与TXD, 做中继, ENABLE,DISABLE
-
+	uint8_t	UART_RXD_TXD_Short;	//内部短路RXD与TXD, 做中继, ENABLE,DISABLE //UART1 才生效
+    uint8_t RX_TimeOut;//设置接收超时时间
+    usart_rx_timer_out_cb_t timer_out_cb;//接收超时与缓存满回调
 } COMx_InitDefine; 
 
-uint8_t	USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx);
+
+void USART_Set_rx_timer_out_cb(uint8_t UARTx, usart_rx_timer_out_cb_t timer_out_cb,uint8_t RX_TimeOut);//设置超时通知回调
+int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx);
 void UARTx_writebuff(enum USARTx com, uint8_t dat);	//写入发送缓冲，指针+1
 void PrintString(enum USARTx com, uint8_t *puts);
+uint8_t UARTx_ReadRxLen(enum USARTx com);//获取接收的大小
+int8_t UARTx_ReadRxChar(enum USARTx com,uint8_t *dat);//取出一个数据
+int8_t UARTx_CheckRxChar(enum USARTx com,uint8_t *dat);//查看一个数据 并不从队列里取出数据只是查看一下数据
+int8_t UARTx_CheckPosRxBuff(enum USARTx com,uint8_t pos,uint8_t *buff,uint8_t len);//查看指定地方的数据 //并不从队列里取出数据只是查看一下数据
+int8_t UARTx_CheckRxBuff(enum USARTx com,uint8_t *buff,uint8_t len);//查看数据 并不从队列里取出数据只是查看一下数据
+int8_t UARTx_RemoveRxBuff(enum USARTx com,uint8_t len);//移除数据
 
 #endif
 
