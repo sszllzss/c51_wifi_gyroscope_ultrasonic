@@ -1,0 +1,1 @@
+"..\device\gpio.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\application;..\device) DEBUG OBJECTEXTEND PRINT(.\out\Listings\gpio.lst) OBJECT(.\out\gpio.obj)

@@ -1,0 +1,1 @@
+"..\device\timer.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\application;..\device) DEBUG OBJECTEXTEND PRINT(.\out\Listings\timer.lst) OBJECT(.\out\timer.obj)

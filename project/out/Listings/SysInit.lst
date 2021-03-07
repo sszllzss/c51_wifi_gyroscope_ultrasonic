@@ -1,0 +1,140 @@
+C51 COMPILER V9.59.0.0   SYSINIT                                                           03/06/2021 23:00:10 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE SYSINIT
+OBJECT MODULE PLACED IN .\out\SysInit.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\application\SysInit.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\application;
+                    -..\device) DEBUG OBJECTEXTEND PRINT(.\out\Listings\SysInit.lst) OBJECT(.\out\SysInit.obj)
+
+line level    source
+
+   1          #include "config.h"
+   2          #include "gpio.h"
+   3          #include "SysInit.h"
+   4          #include "delay.h"
+   5          #include "usart.h"
+   6          
+   7          static void GPIO_Init(void)
+   8          {
+   9   1          GPIO_Inilize(GPIO_P0,GPIO_Pin_All,GPIO_HighZ);
+  10   1          GPIO_Inilize(GPIO_P1,GPIO_Pin_All,GPIO_HighZ);
+  11   1          GPIO_Inilize(GPIO_P2,GPIO_Pin_All,GPIO_HighZ);
+  12   1          GPIO_Inilize(GPIO_P3,GPIO_Pin_2|GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_6|GPIO_Pin_7,GPIO
+             -_HighZ);
+  13   1          GPIO_Inilize(GPIO_P4,GPIO_Pin_All,GPIO_HighZ);
+  14   1          GPIO_Inilize(GPIO_P5,GPIO_Pin_All,GPIO_HighZ);
+  15   1      }
+  16          static void Uart_Init(void)
+  17          {
+  18   1          COMx_InitDefine init_define;
+  19   1      #ifdef USING_UART1
+  20   1          init_define.UART_Mode = UART_8bit_BRTx;                                                               
+             -    
+  21   1          init_define.UART_BRT_Use = BRT_Timer2;
+  22   1          init_define.UART_BaudRate = 9600L;
+  23   1          init_define.Morecommunicate = DISABLE;//关闭多机通讯
+  24   1          init_define.BaudRateDouble = DISABLE;//关闭双倍波特率
+  25   1          init_define.UART_RXD_TXD_Short = DISABLE;
+  26   1          init_define.UART_RxEnable = ENABLE;//打开接收
+  27   1          init_define.UART_Interrupt = ENABLE;//打开中断
+  28   1          init_define.UART_Polity = PolityHigh;//高优先级
+  29   1      #if  defined(DEBUG_PRINTF_UART1_SW_P30_P31)
+                  init_define.UART_P_SW = UART1_SW_P30_P31;//选择输出串口硬件为 P30 P31
+                  GPIO_Inilize(GPIO_P3,GPIO_Pin_0|GPIO_Pin_1,GPIO_PullUp);
+              #elif defined(DEBUG_PRINTF_UART1_SW_P36_P37)
+  33   1          init_define.UART_P_SW = UART1_SW_P36_P37;//选择输出串口硬件为 P36 P37
+  34   1          GPIO_Inilize(GPIO_P3,GPIO_Pin_6|GPIO_Pin_7,GPIO_PullUp);
+  35   1      #elif defined(DEBUG_PRINTF_UART1_SW_P16_P17)
+                  init_define.UART_P_SW = UART1_SW_P16_P17;//选择输出串口硬件为 P16 P17 必须使用内部时钟
+                  GPIO_Inilize(GPIO_P1,GPIO_Pin_6|GPIO_Pin_7,GPIO_PullUp);
+              #endif
+  39   1          USART_Configuration(USART1,&init_define);
+  40   1      #endif
+  41   1      #ifdef USING_UART2
+  42   1          init_define.UART_Mode = UART_8bit_BRTx;                                                               
+             -    
+  43   1          init_define.UART_BRT_Use = BRT_Timer2;
+  44   1          init_define.UART_BaudRate = 9600L;
+  45   1          init_define.Morecommunicate = DISABLE;//关闭多机通讯
+  46   1          init_define.BaudRateDouble = DISABLE;//关闭双倍波特率
+  47   1          init_define.UART_RXD_TXD_Short = DISABLE;
+  48   1          init_define.UART_RxEnable = ENABLE;//打开接收
+  49   1          init_define.UART_Interrupt = ENABLE;//打开中断
+  50   1          init_define.UART_Polity = PolityHigh;//高优先级
+  51   1          init_define.UART_P_SW = UART2_SW_P10_P11;//选择输出串口硬件为 P10 P11
+C51 COMPILER V9.59.0.0   SYSINIT                                                           03/06/2021 23:00:10 PAGE 2   
+
+  52   1          GPIO_Inilize(GPIO_P1,GPIO_Pin_0|GPIO_Pin_1,GPIO_PullUp);
+  53   1      //    init_define.UART_P_SW = UART2_SW_P46_P47;//选择输出串口硬件为 P46 P47
+  54   1      //    GPIO_Inilize(GPIO_P4,GPIO_Pin_6|GPIO_Pin_7,GPIO_PullUp);
+  55   1      
+  56   1          USART_Configuration(USART2,&init_define);
+  57   1      #endif
+  58   1      #ifdef USING_UART3
+                  init_define.UART_Mode = UART_8bit_BRTx;                                                               
+             -    
+                  init_define.UART_BRT_Use = BRT_Timer2;
+                  init_define.UART_BaudRate = 9600L;
+                  init_define.Morecommunicate = DISABLE;//关闭多机通讯
+                  init_define.BaudRateDouble = DISABLE;//关闭双倍波特率
+                  init_define.UART_RXD_TXD_Short = DISABLE;
+                  init_define.UART_RxEnable = ENABLE;//打开接收
+                  init_define.UART_Interrupt = ENABLE;//打开中断
+                  init_define.UART_Polity = PolityHigh;//高优先级
+                  init_define.UART_P_SW = UART3_SW_P00_P01;//选择输出串口硬件为 P01 P01
+                  GPIO_Inilize(GPIO_P0,GPIO_Pin_0|GPIO_Pin_1,GPIO_PullUp);
+              //    init_define.UART_P_SW = UART3_SW_P56_P51;//选择输出串口硬件为 P56 P51
+              //    GPIO_Inilize(GPIO_P5,GPIO_Pin_6|GPIO_Pin_1,GPIO_PullUp);
+                  USART_Configuration(USART3,&init_define);
+              #endif
+  74   1      #ifdef USING_UART4
+                  init_define.UART_Mode = UART_8bit_BRTx;                                                               
+             -    
+                  init_define.UART_BRT_Use = BRT_Timer2;
+                  init_define.UART_BaudRate = 9600L;
+                  init_define.Morecommunicate = DISABLE;//关闭多机通讯
+                  init_define.BaudRateDouble = DISABLE;//关闭双倍波特率
+                  init_define.UART_RXD_TXD_Short = DISABLE;
+                  init_define.UART_RxEnable = ENABLE;//打开接收
+                  init_define.UART_Interrupt = ENABLE;//打开中断
+                  init_define.UART_Polity = PolityHigh;//高优先级
+                  init_define.UART_P_SW = UART4_SW_P02_P03;//选择输出串口硬件为 P02 P03
+                  GPIO_Inilize(GPIO_P0,GPIO_Pin_2|GPIO_Pin_3,GPIO_PullUp);
+              //    init_define.UART_P_SW = UART4_SW_P52_P53;//选择输出串口硬件为 P52 P53
+              //    GPIO_Inilize(GPIO_P5,GPIO_Pin_2|GPIO_Pin_3,GPIO_PullUp);
+                  USART_Configuration(USART4,&init_define);
+              #endif
+  90   1      }
+  91          void SysInit(void)
+  92          {
+  93   1          EA = 1;
+  94   1          GPIO_Init();
+  95   1          delay_init();
+  96   1          Uart_Init();
+  97   1      }
+  98          #ifdef DEBUG_PRINTF
+  99          //重写putchar函数
+ 100          char putchar(char c)
+ 101          {
+ 102   1      
+ 103   1              UARTx_writebuff(USART1,c);
+ 104   1          return c;
+ 105   1      }
+ 106          #endif
+ 107          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    176    ----
+C51 COMPILER V9.59.0.0   SYSINIT                                                           03/06/2021 23:00:10 PAGE 3   
+
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      12
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

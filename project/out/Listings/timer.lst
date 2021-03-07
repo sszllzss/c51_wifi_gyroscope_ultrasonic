@@ -1,0 +1,264 @@
+C51 COMPILER V9.59.0.0   TIMER                                                             03/06/2021 23:00:12 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN .\out\timer.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\device\timer.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\application;..\devi
+                    -ce) DEBUG OBJECTEXTEND PRINT(.\out\Listings\timer.lst) OBJECT(.\out\timer.obj)
+
+line level    source
+
+   1          #include        "timer.h"
+   2          
+   3          static timer_interrupt_cb_t timer0_int_cb = NULL;
+   4          static timer_interrupt_cb_t timer1_int_cb = NULL;
+   5          static timer_interrupt_cb_t timer2_int_cb = NULL;
+   6          static timer_interrupt_cb_t timer3_int_cb = NULL;
+   7          static timer_interrupt_cb_t timer4_int_cb = NULL;
+   8          /********************* Timer0中断函数************************/
+   9          void timer0_int (void) interrupt TIMER0_VECTOR
+  10          {
+  11   1      
+  12   1          if(timer0_int_cb)
+  13   1              timer0_int_cb();
+  14   1         
+  15   1      }
+  16          
+  17          /********************* Timer1中断函数************************/
+  18          void timer1_int (void) interrupt TIMER1_VECTOR
+  19          {
+  20   1          if(timer1_int_cb)
+  21   1              timer1_int_cb();
+  22   1      }
+  23          
+  24          /********************* Timer2中断函数************************/
+  25          void timer2_int (void) interrupt TIMER2_VECTOR
+  26          {
+  27   1          if(timer2_int_cb)
+  28   1              timer2_int_cb();
+  29   1      }
+  30          
+  31          /********************* Timer3中断函数************************/
+  32          void timer3_int (void) interrupt TIMER3_VECTOR
+  33          {
+  34   1          if(timer3_int_cb)
+  35   1              timer3_int_cb();
+  36   1      }
+  37          
+  38          /********************* Timer4中断函数************************/
+  39          void timer4_int (void) interrupt TIMER4_VECTOR
+  40          {
+  41   1          if(timer4_int_cb)
+  42   1              timer4_int_cb();
+  43   1      }
+  44          
+  45          
+  46          //========================================================================
+  47          // 函数: u8     Timer_Inilize(uint8_t TIM, TIM_InitTypeDef *TIMx)
+  48          // 描述: 定时器初始化程序.
+  49          // 参数: TIMx: 结构参数,请参考timer.h里的定义.
+  50          // 返回: 成功返回0, 空操作返回1,错误返回2.
+  51          //========================================================================
+  52          uint8_t Timer_Inilize(uint8_t TIM, TIM_InitTypeDef *TIMx)
+  53          {
+  54   1              if(TIM > TIM4)  return 1;       //空操作
+C51 COMPILER V9.59.0.0   TIMER                                                             03/06/2021 23:00:12 PAGE 2   
+
+  55   1      
+  56   1              if(TIM == TIM0)
+  57   1              {
+  58   2                      TR0 = 0;                //停止计数
+  59   2                      if(TIMx->TIM_Interrupt == ENABLE){timer0_int_cb=TIMx->TIM_Timerout_Callback;ET0 = 1;}//允许中断
+  60   2                      else                                                                    ET0 = 0;        //禁止中断
+  61   2                      if(TIMx->TIM_Polity == PolityHigh)              PT0 = 1;        //高优先级中断
+  62   2                      else                                                                    PT0 = 0;        //低优先级中断
+  63   2                      if(TIMx->TIM_Mode >  TIM_16BitAutoReloadNoMask) return 2;       //错误
+  64   2                      TMOD = (TMOD & ~0x03) | TIMx->TIM_Mode; //工作模式,0: 16位自动重装, 1: 16位定时/计数, 2: 8位自动重装, 3:
+             - 16位自动重装, 不可屏蔽中断
+  65   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_12T)        AUXR &= ~0x80;  //12T
+  66   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_1T)         AUXR |=  0x80;  //1T
+  67   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_Ext)        TMOD |=  0x04;  //对外计数或分频
+  68   2                      else                                                                            TMOD &= ~0x04;  //定时
+  69   2                      if(TIMx->TIM_ClkOut == ENABLE)  INT_CLKO |=  0x01;      //输出时钟
+  70   2                      else                                                    INT_CLKO &= ~0x01;      //不输出时钟
+  71   2                      
+  72   2                      TH0 = (u8)(TIMx->TIM_Value >> 8);
+  73   2                      TL0 = (u8)TIMx->TIM_Value;
+  74   2                      if(TIMx->TIM_Run == ENABLE)     TR0 = 1;        //开始运行
+  75   2                      return  0;              //成功
+  76   2              }
+  77   1              else if(TIM == TIM1)
+  78   1              {
+  79   2                      TR1 = 0;                //停止计数
+  80   2                      if(TIMx->TIM_Interrupt == ENABLE){timer1_int_cb=TIMx->TIM_Timerout_Callback;ET1 = 1;}//允许中断
+  81   2                      else                                                                    ET1 = 0;        //禁止中断
+  82   2                      if(TIMx->TIM_Polity == PolityHigh)              PT1 = 1;        //高优先级中断
+  83   2                      else                                                                    PT1 = 0;        //低优先级中断
+  84   2                      if(TIMx->TIM_Mode >= TIM_16BitAutoReloadNoMask) return 2;       //错误
+  85   2                      TMOD = (TMOD & ~0x30) | TIMx->TIM_Mode; //工作模式,0: 16位自动重装, 1: 16位定时/计数, 2: 8位自动重装
+  86   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_12T)        AUXR &= ~0x40;  //12T
+  87   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_1T)         AUXR |=  0x40;  //1T
+  88   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_Ext)        TMOD |=  0x40;  //对外计数或分频
+  89   2                      else                                                                            TMOD &= ~0x40;  //定时
+  90   2                      if(TIMx->TIM_ClkOut == ENABLE)  INT_CLKO |=  0x02;      //输出时钟
+  91   2                      else                                                    INT_CLKO &= ~0x02;      //不输出时钟
+  92   2                      
+  93   2                      TH1 = (u8)(TIMx->TIM_Value >> 8);
+  94   2                      TL1 = (u8)TIMx->TIM_Value;
+  95   2                      if(TIMx->TIM_Run == ENABLE)     TR1 = 1;        //开始运行
+  96   2                      return  0;              //成功
+  97   2              }
+  98   1              else if(TIM == TIM2)            //TIM2,固定为16位自动重装, 中断无优先级
+  99   1              {
+ 100   2                      AUXR &= ~(1<<4);        //停止计数
+ 101   2                      if(TIMx->TIM_Interrupt == ENABLE){timer2_int_cb=TIMx->TIM_Timerout_Callback;IE2  |=  (1<<2);}//允许中断
+ 102   2                      else                                                                            IE2  &= ~(1<<2);        //禁止中断
+ 103   2                      if(TIMx->TIM_ClkSource >  TIM_CLOCK_Ext)        return 2;
+ 104   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_12T)        AUXR &= ~(1<<2);        //12T
+ 105   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_1T)         AUXR |=  (1<<2);        //1T
+ 106   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_Ext)        AUXR |=  (1<<3);        //对外计数或分频
+ 107   2                      else                                                                            AUXR &= ~(1<<3);        //定时
+ 108   2                      if(TIMx->TIM_ClkOut == ENABLE)  INT_CLKO |=  0x04;      //输出时钟
+ 109   2                      else                                                    INT_CLKO &= ~0x04;      //不输出时钟
+ 110   2      
+ 111   2                      T2H = (u8)(TIMx->TIM_Value >> 8);
+ 112   2                      T2L = (u8)TIMx->TIM_Value;
+ 113   2                      if(TIMx->TIM_Run == ENABLE)     AUXR |=  (1<<4);        //开始运行
+ 114   2                      return  0;              //成功
+ 115   2              }
+C51 COMPILER V9.59.0.0   TIMER                                                             03/06/2021 23:00:12 PAGE 3   
+
+ 116   1          else if(TIM == TIM3)                //TIM3,固定为16位自动重装, 中断无优先级
+ 117   1              {
+ 118   2                      T3T4M &= ~(1<<3);       //停止计数
+ 119   2                      if(TIMx->TIM_Interrupt == ENABLE){timer3_int_cb=TIMx->TIM_Timerout_Callback;IE2  |=  (1<<5);}//允许中断
+ 120   2                      else                                                                            IE2  &= ~(1<<5);        //禁止中断
+ 121   2                      if(TIMx->TIM_ClkSource >  TIM_CLOCK_Ext)        return 2;
+ 122   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_12T)        T3T4M &= ~(1<<1);       //12T
+ 123   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_1T)         T3T4M |=  (1<<1);       //1T
+ 124   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_Ext)        T3T4M |=  (1<<2);       //对外计数或分频
+ 125   2                      else                                                                            T3T4M &= ~(1<<2);       //定时
+ 126   2                      if(TIMx->TIM_ClkOut == ENABLE)  T3T4M |=  0x01; //输出时钟
+ 127   2                      else                                                    T3T4M &= ~0x01; //不输出时钟
+ 128   2      
+ 129   2                      T3H = (u8)(TIMx->TIM_Value >> 8);
+ 130   2                      T3L = (u8)TIMx->TIM_Value;
+ 131   2                      if(TIMx->TIM_Run == ENABLE)     T3T4M |=  (1<<3);       //开始运行
+ 132   2                      return  0;              //成功
+ 133   2              }
+ 134   1          else if(TIM == TIM4)                //TIM4,固定为16位自动重装, 中断无优先级
+ 135   1              {
+ 136   2                      T3T4M &= ~(1<<7);       //停止计数
+ 137   2                      if(TIMx->TIM_Interrupt == ENABLE){timer4_int_cb=TIMx->TIM_Timerout_Callback;IE2  |=  (1<<6);}//允许中断
+ 138   2                      else                                                                            IE2  &= ~(1<<6);        //禁止中断
+ 139   2                      if(TIMx->TIM_ClkSource >  TIM_CLOCK_Ext)        return 2;
+ 140   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_12T)        T3T4M &= ~(1<<5);       //12T
+ 141   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_1T)         T3T4M |=  (1<<5);       //1T
+ 142   2                      if(TIMx->TIM_ClkSource == TIM_CLOCK_Ext)        T3T4M |=  (1<<6);       //对外计数或分频
+ 143   2                      else                                                                            T3T4M &= ~(1<<6);       //定时
+ 144   2                      if(TIMx->TIM_ClkOut == ENABLE)  T3T4M |=  (1<<4);       //输出时钟
+ 145   2                      else                                                    T3T4M &= ~(1<<4);       //不输出时钟
+ 146   2      
+ 147   2                      T4H = (u8)(TIMx->TIM_Value >> 8);
+ 148   2                      T4L = (u8)TIMx->TIM_Value;
+ 149   2                      if(TIMx->TIM_Run == ENABLE)     T3T4M |=  (1<<7);       //开始运行
+ 150   2                      return  0;              //成功
+ 151   2              }
+ 152   1              return 2;       //错误
+ 153   1      }
+ 154          uint8_t Timer_Start(uint8_t TIM, uint8_t TIM_Run)
+ 155          {
+ 156   1          if(TIM > TIM4)      return 1;       //空操作
+ 157   1      
+ 158   1              if(TIM == TIM0)
+ 159   1              {
+ 160   2                      if(TIM_Run == ENABLE)   TR0 = 1;        //开始运行
+ 161   2              else TR0 = 0;
+ 162   2                      return  0;              //成功
+ 163   2              }
+ 164   1              else if(TIM == TIM1)
+ 165   1              {
+ 166   2                      if(TIM_Run == ENABLE)   TR1 = 1;        //开始运行
+ 167   2              else TR1 = 0;   
+ 168   2                      return  0;              //成功
+ 169   2              }
+ 170   1              else if(TIM == TIM2)            //TIM2,固定为16位自动重装, 中断无优先级
+ 171   1              {
+ 172   2                      if(TIM_Run == ENABLE)   AUXR |=  (1<<4);        //开始运行
+ 173   2              else AUXR &=  ~(1<<4);  
+ 174   2                      return  0;              //成功
+ 175   2              }
+ 176   1          else if(TIM == TIM3)                //TIM3,固定为16位自动重装, 中断无优先级
+ 177   1              {
+C51 COMPILER V9.59.0.0   TIMER                                                             03/06/2021 23:00:12 PAGE 4   
+
+ 178   2                      if(TIM_Run == ENABLE)   T3T4M |=  (1<<3);       //开始运行
+ 179   2              else T3T4M &=  ~(1<<3); 
+ 180   2                      return  0;              //成功
+ 181   2              }
+ 182   1          else if(TIM == TIM4)                //TIM4,固定为16位自动重装, 中断无优先级
+ 183   1              {
+ 184   2                      if(TIM_Run == ENABLE)   T3T4M |=  (1<<7);       //开始运行
+ 185   2              else T3T4M &=  ~(1<<7); 
+ 186   2                      return  0;              //成功
+ 187   2              }
+ 188   1              return 2;       //错误
+ 189   1      }
+ 190          uint16_t Timer_Get_Value(uint8_t TIM)
+ 191          {
+ 192   1          uint16_t rec = 0;
+ 193   1          if(TIM > TIM4)      return 0;       //空操作
+ 194   1          
+ 195   1              if(TIM == TIM0)
+ 196   1              {
+ 197   2              rec = TH0;
+ 198   2              rec  = rec<<8;
+ 199   2              rec |= TL0;
+ 200   2                      return  rec;
+ 201   2              }
+ 202   1              else if(TIM == TIM1)
+ 203   1              {
+ 204   2              rec = TH1;
+ 205   2              rec  = rec<<8;
+ 206   2              rec |= TL1;
+ 207   2                      return  rec;
+ 208   2              }
+ 209   1              else if(TIM == TIM2)            //TIM2,固定为16位自动重装, 中断无优先级
+ 210   1              {
+ 211   2              rec = T2H;
+ 212   2              rec  = rec<<8;
+ 213   2              rec |= T2L;
+ 214   2                      return  rec;
+ 215   2              }
+ 216   1          else if(TIM == TIM3)                //TIM3,固定为16位自动重装, 中断无优先级
+ 217   1              {
+ 218   2              rec = T3H;
+ 219   2              rec  = rec<<8;
+ 220   2              rec |= T3L;
+ 221   2                      return  rec;
+ 222   2              }
+ 223   1          else if(TIM == TIM4)                //TIM4,固定为16位自动重装, 中断无优先级
+ 224   1              {
+ 225   2              rec = T4H;
+ 226   2              rec  = rec<<8;
+ 227   2              rec |= T4L;
+ 228   2                      return  rec;
+ 229   2              }
+ 230   1              return 0;       //错误
+ 231   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1504    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     15       3
+C51 COMPILER V9.59.0.0   TIMER                                                             03/06/2021 23:00:12 PAGE 5   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
