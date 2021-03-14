@@ -34,4 +34,11 @@
 //#define USING_UART4//¿ªÆô´®¿Ú4
 //#define	COM_TX4_Lenth	128
 //#define	COM_RX4_Lenth	128
+
+
+
+#define USING_PCA0 
+//#define USING_PCA1
+//#define USING_PCA2
+
 #endif

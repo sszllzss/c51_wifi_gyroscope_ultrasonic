@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 1   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE USART
@@ -62,7 +62,7 @@ line level    source
   52   3                  Uartx_config[i].RX_TimeOut--;
   53   3                  if(Uartx_config[i].RX_TimeOut==0)
   54   3                  {
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 2   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 2   
 
   55   4                      if(Uartx_config[i].timer_out_cb)
   56   4                      {
@@ -126,7 +126,7 @@ line level    source
  113   3      
  114   3                              if(COMx->UART_BRT_Use == BRT_Timer1)
  115   3                              {
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 3   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 3   
 
  116   4                                      TR1 = 0;
  117   4                                      AUXR &= ~0x01;          //S1 BRT Use Timer1;
@@ -190,7 +190,7 @@ line level    source
  175   3                              if(COMx->UART_Mode == UART_9bit_BRTx)   S2CON |=  (1<<7);       //9bit
  176   3                              else                                                                    S2CON &= ~(1<<7);       //8bit
  177   3                              j = (MAIN_Fosc / 4) / COMx->UART_BaudRate;      //按1T计算
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 4   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 4   
 
  178   3                              if(j >= 65536UL)        return 2;       //错误
  179   3                              j = 65536UL - j;
@@ -254,7 +254,7 @@ line level    source
                           {
                               return 2;       //模式错误
                           }
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 5   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 5   
 
               
                               }
@@ -318,7 +318,7 @@ line level    source
                               if(COMx->UART_RxEnable == ENABLE)       S4CON |=  (1<<4);       //允许接收
                               else                                                            S4CON &= ~(1<<4);       //禁止接收
                               P_SW2 = (P_SW2 & ~(1<<2)) | ((COMx->UART_P_SW & 0x01)<<2);      //切换IO
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 6   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 6   
 
                       }
               #endif
@@ -382,7 +382,7 @@ line level    source
                       }
               }
               #endif
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 7   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 7   
 
  364          
  365          void UARTx_writebuff(enum USARTx com, uint8_t dat)      //写入发送缓冲，指针+1
@@ -446,7 +446,7 @@ line level    source
  422   3                  {
  423   4                      buff[i] = Uartx_config[com].Rx_buff[(Uartx_config[com].RX_Front + pos)%(Uartx_config[com].
              -RX_BuffLen) + i];
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 8   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 8   
 
  424   4                  }
  425   3              }
@@ -510,7 +510,7 @@ line level    source
  481          /********************* UART1中断函数************************/
  482          void UART1_int (void) interrupt UART1_VECTOR
  483          {
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 9   
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 9   
 
  484   1              if(RI)
  485   1              {
@@ -574,7 +574,7 @@ line level    source
  541   2              }
  542   1      
  543   1      }
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 10  
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 10  
 
  544          #endif
  545          #ifdef USING_UART3
@@ -638,7 +638,7 @@ line level    source
                               {
                                       S4BUF = TX4_Buffer[Uartx_config[USART4].TX_read];
                                       if(++Uartx_config[USART4].TX_read >= COM_TX4_Lenth)             Uartx_config[USART4].TX_read = 0;
-C51 COMPILER V9.59.0.0   USART                                                             03/07/2021 19:22:28 PAGE 11  
+C51 COMPILER V9.59.0.0   USART                                                             03/14/2021 23:43:23 PAGE 11  
 
                               }
                               else    Uartx_config[USART4].B_TX_busy = 0;

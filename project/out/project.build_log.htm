@@ -22,12 +22,18 @@ Dialog DLL:      TP51.DLL V2.60.0.0
  
 <h2>Project:</h2>
 D:\win10Pro\Desktop\File\Src\51\c51_wifi_gyroscope_ultrasonic\project\project.uvproj
-Project File Date:  03/05/2021
+Project File Date:  03/14/2021
 
 <h2>Output:</h2>
 Build target 'Project'
 compiling main.c...
 compiling SysInit.c...
+compiling gpio.c...
+compiling delay.c...
+compiling timer.c...
+compiling usart.c...
+compiling pca.c...
+..\device\pca.c(204): warning C316: unterminated conditionals
 linking...
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_PUTCHAR?SYSINIT
@@ -55,10 +61,14 @@ linking...
     SEGMENT: ?PR?_UARTX_REMOVERXBUFF?USART
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_PRINTSTRING?USART
-Program Size: data=95.0 xdata=563 code=6760
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_PWMN_UPDATE?PCA
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_PCA_INIT?PCA
+Program Size: data=105.1 xdata=563 code=7089
 creating hex file from ".\out\project"...
-".\out\project" - 0 Error(s), 13 Warning(s).
-Build Time Elapsed:  00:00:02
+".\out\project" - 0 Error(s), 16 Warning(s).
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   SYSINIT                                                           03/07/2021 20:28:05 PAGE 1   
+C51 COMPILER V9.59.0.0   SYSINIT                                                           03/14/2021 23:43:22 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE SYSINIT
@@ -62,7 +62,7 @@ line level    source
   49   1          init_define.UART_Interrupt = ENABLE;//打开中断
   50   1          init_define.UART_Polity = PolityHigh;//高优先级
   51   1          init_define.UART_P_SW = UART2_SW_P10_P11;//选择输出串口硬件为 P10 P11
-C51 COMPILER V9.59.0.0   SYSINIT                                                           03/07/2021 20:28:05 PAGE 2   
+C51 COMPILER V9.59.0.0   SYSINIT                                                           03/14/2021 23:43:22 PAGE 2   
 
   52   1          GPIO_Inilize(GPIO_P1,GPIO_Pin_0|GPIO_Pin_1,GPIO_PullUp);
   53   1      //    init_define.UART_P_SW = UART2_SW_P46_P47;//选择输出串口硬件为 P46 P47
@@ -126,7 +126,7 @@ line level    source
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =    176    ----
-C51 COMPILER V9.59.0.0   SYSINIT                                                           03/07/2021 20:28:05 PAGE 3   
+C51 COMPILER V9.59.0.0   SYSINIT                                                           03/14/2021 23:43:22 PAGE 3   
 
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----

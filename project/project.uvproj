@@ -421,6 +421,11 @@
               <FileType>1</FileType>
               <FilePath>..\device\usart.c</FilePath>
             </File>
+            <File>
+              <FileName>pca.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\device\pca.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

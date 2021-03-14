@@ -4,6 +4,7 @@
 ".\out\gpio.obj",
 ".\out\delay.obj",
 ".\out\timer.obj",
-".\out\usart.obj" 
+".\out\usart.obj",
+".\out\pca.obj" 
 TO ".\out\project" 
 PRINT(".\out\Listings\project.m51") RAMSIZE(256) 
