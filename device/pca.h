@@ -48,6 +48,7 @@
 #define	PCA_PWM_7bit	(1<<6)
 #define	PCA_PWM_6bit	(2<<6)
 
+typedef void((*pca_interrupt_cb_t)(uint8_t PCA_id,uint16_t value));
 
 typedef struct
 {
@@ -58,9 +59,10 @@ typedef struct
 	uint8_t	PCA_Interrupt_Mode;	//PCA_Rise_Active, PCA_Fall_Active, ENABLE, DISABLE
 	uint8_t	PCA_Polity;	//优先级设置	PolityHigh,PolityLow
 	uint16_t PCA_Value; 
+    pca_interrupt_cb_t PCA_Callback;
 } PCA_InitTypeDef;
 
-#ifdef USING_PCA0
+
 
 #ifdef USING_PCA0
 extern bit		B_Capture0;

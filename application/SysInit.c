@@ -88,12 +88,14 @@ static void Uart_Init(void)
     USART_Configuration(USART4,&init_define);
 #endif
 }
+
 void SysInit(void)
 {
     EA = 1;
     GPIO_Init();
     delay_init();
     Uart_Init();
+
 }
 #ifdef DEBUG_PRINTF
 //ÖØÐ´putcharº¯Êý
