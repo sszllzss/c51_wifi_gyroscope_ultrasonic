@@ -4,40 +4,26 @@
 #include "delay.h"
 #include "usart.h"
 #include "stdio.h"
-#include "pca.h"
+#include "ultrasonic.h"
 
-static void pca_interrupt_cb(uint8_t PCA_id,uint16_t value)
-{
-    P55=!P55;
-}
-static void Pca_Init(void)
-{
-    PCA_InitTypeDef PCA_def;
-    PCA_def.PCA_IoUse = PCA_P34_P35_P36_P37;
-    PCA_def.PCA_Clock = PCA_Clock_12T;
-    PCA_def.PCA_Mode = PCA_Mode_PWM;
-    PCA_def.PCA_PWM_Wide = PCA_PWM_8bit;
-    PCA_def.PCA_Interrupt_Mode = PCA_Rise_Active|PCA_Fall_Active|ENABLE;
-    PCA_def.PCA_Polity = PolityHigh;
-    PCA_def.PCA_Value = 128;
-    PCA_def.PCA_Callback = pca_interrupt_cb;
-    PCA_Init(PCA0, &PCA_def);
-    PCA_Init(PCA_Counter, &PCA_def);
-}
+
 int main()
 {
+    double distance = 0;
     uint8_t  pwm=128;
     uint16_t i;
     SysInit();
-    Pca_Init();
+    U_Init();
     GPIO_Inilize(GPIO_P5,GPIO_Pin_5,GPIO_OUT_PP);
     P55=0;
     while(1)
     {
-        PWMn_Update(PCA0, pwm++);
-        for(i=0;i<100;i++)
+        distance = U_GetDistance();
+        P55=!P55;
+        printf("distance:%f\r\n",distance);
+        for(i=0;i<1000;i++)
         {
-            delay_us(80);
+            delay_us(800);
         }
         if(UARTx_ReadRxLen(USART1) > 0)
         {

@@ -64,24 +64,7 @@ typedef struct
 
 
 
-#ifdef USING_PCA0
-extern bit		B_Capture0;
-extern uint8_t		PCA0_mode;
-extern uint16_t		CCAP0_tmp,PCA_Timer0;
-extern uint16_t	PWM0_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
-#endif
-#ifdef USING_PCA1
-extern bit		B_Capture1;
-extern uint8_t		PCA1_mode;
-extern uint16_t		CCAP1_tmp,PCA_Timer1;
-extern uint16_t	PWM1_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
-#endif
-#ifdef USING_PCA2
-extern bit		B_Capture2;
-extern uint8_t		PCA2_mode;
-extern uint16_t		CCAP2_tmp,PCA_Timer2;
-extern uint16_t	PWM2_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
-#endif
+
 
 
 void PCA_Init(uint8_t PCA_id, PCA_InitTypeDef *PCAx);

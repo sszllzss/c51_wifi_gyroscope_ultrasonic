@@ -386,6 +386,11 @@
               <FileType>1</FileType>
               <FilePath>..\application\SysInit.c</FilePath>
             </File>
+            <File>
+              <FileName>ultrasonic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\application\ultrasonic.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
