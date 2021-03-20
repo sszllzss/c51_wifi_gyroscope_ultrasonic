@@ -2,9 +2,9 @@
 #include "pca.h"
 #include "gpio.h"
 #include "delay.h"
-static uint32_t xdata u_cnt = 0;
-static uint32_t xdata u_ago = 0;
-static double xdata u_distance = 0.0;
+static uint32_t data u_cnt = 0;
+static uint32_t data u_ago = 0;
+static double data u_distance = 0.0;
 static bit u_is_high=0;
 static void pca_interrupt_cb(uint8_t PCA_id,uint16_t value)
 {
@@ -40,7 +40,7 @@ static void pca_interrupt_cb(uint8_t PCA_id,uint16_t value)
 }
 static void U_Hook()//1ms
 {
-    static uint8_t xdata cont_timerout = 0;
+    static uint8_t data cont_timerout = 0;
     cont_timerout++;
     if(cont_timerout==70)
     {

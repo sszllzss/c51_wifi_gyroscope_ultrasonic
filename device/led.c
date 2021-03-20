@@ -1,10 +1,10 @@
 #include "led.h"
 #include "gpio.h"
 #include "delay.h"
-static uint16_t xdata led_cnt = 0;
-static uint16_t xdata led_period = 0;
-static uint16_t xdata led_on_tick = 0;
-static uint16_t xdata led_off_tick = 0;
+static uint16_t data led_cnt = 0;
+static uint16_t data led_period = 0;
+static uint16_t data led_on_tick = 0;
+static uint16_t data led_off_tick = 0;
 static void LED_Hook()//1ms
 {
     if(led_period>0)

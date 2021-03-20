@@ -29,6 +29,6 @@
 
 
 void SeparateKey_Init();
-bit SeparateKey_GetValue(uint16_t xdata *value);
+bit SeparateKey_GetValue(uint16_t *value);
 
 #endif

@@ -2,11 +2,11 @@
 
 #include "gpio.h"
 #include "exti.h"
-static Ext_interrupt_cb_t xdata EXT0_interrupt_cb = NULL;
-static Ext_interrupt_cb_t xdata EXT1_interrupt_cb = NULL;
-static Ext_interrupt_cb_t xdata EXT2_interrupt_cb = NULL;
-static Ext_interrupt_cb_t xdata EXT3_interrupt_cb = NULL;
-static Ext_interrupt_cb_t xdata EXT4_interrupt_cb = NULL;
+static Ext_interrupt_cb_t data EXT0_interrupt_cb = NULL;
+static Ext_interrupt_cb_t data EXT1_interrupt_cb = NULL;
+static Ext_interrupt_cb_t data EXT2_interrupt_cb = NULL;
+static Ext_interrupt_cb_t data EXT3_interrupt_cb = NULL;
+static Ext_interrupt_cb_t data EXT4_interrupt_cb = NULL;
 
 /********************* INT0中断函数 *************************/
 void Ext_INT0 (void) interrupt INT0_VECTOR		//进中断时已经清除标志

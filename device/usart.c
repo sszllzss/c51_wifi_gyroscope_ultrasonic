@@ -44,7 +44,7 @@ static COMx_Define xdata Uartx_config[]=
 
 static void USART_Hook()
 {
-    uint8_t i;
+    uint8_t data i;
     for(i=0;i<sizeof(Uartx_config)/sizeof(Uartx_config[0]);i++)
     {
         if(Uartx_config[i].RX_TimeOut > 0)

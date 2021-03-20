@@ -2,10 +2,10 @@
 #include	"timer.h"
 
 
-static delay_timer_hook_t xdata timer_hook[DELAY_TIMER_HOOK_SIZE];
-static uint8_t xdata timer_hook_pointer = 0;
-static uint32_t xdata delay_ms_tick_cnt = 0;
-static uint16_t xdata delay_TIM_Value = 0;
+static delay_timer_hook_t data timer_hook[DELAY_TIMER_HOOK_SIZE];
+static uint8_t data timer_hook_pointer = 0;
+static uint32_t data delay_ms_tick_cnt = 0;
+static uint16_t data delay_TIM_Value = 0;
 //========================================================================
 // 函数: void  delay_ms(uint8_t ms)
 // 描述: 延时函数。
@@ -64,7 +64,7 @@ uint32_t delay_get_tick()
 }
 static void delay_Timerout_Callback()//1ms进入一次中断
 {
-    uint8_t i;
+    uint8_t data i;
     delay_ms_tick_cnt++;
     if(timer_hook_pointer>0)
     {

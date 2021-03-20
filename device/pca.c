@@ -3,23 +3,23 @@
 #include "gpio.h"
 #ifdef USING_PCA0
 
-uint8_t	xdata	PCA0_mode;
-uint16_t xdata	CCAP0_tmp,PCA_Timer0;
-uint16_t xdata	PWM0_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
+uint8_t	data	PCA0_mode;
+uint16_t data	CCAP0_tmp,PCA_Timer0;
+uint16_t data	PWM0_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
 static pca_interrupt_cb_t PCA0_Callback=NULL;
 #endif
 #ifdef USING_PCA1
 
-uint8_t xdata PCA1_mode;
-uint16_t xdata CCAP1_tmp,PCA_Timer1;
-uint16_t xdata PWM1_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
+uint8_t data PCA1_mode;
+uint16_t data CCAP1_tmp,PCA_Timer1;
+uint16_t data PWM1_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
 static pca_interrupt_cb_t PCA1_Callback=NULL;
 #endif
 #ifdef USING_PCA2
 
-uint8_t xdata PCA2_mode;
-uint16_t xdata CCAP2_tmp,PCA_Timer2;
-uint16_t xdata PWM2_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
+uint8_t data PCA2_mode;
+uint16_t data CCAP2_tmp,PCA_Timer2;
+uint16_t data PWM2_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
 static pca_interrupt_cb_t PCA2_Callback=NULL;
 #endif
 

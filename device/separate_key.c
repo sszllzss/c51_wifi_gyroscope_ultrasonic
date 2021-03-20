@@ -2,27 +2,27 @@
 #include "gpio.h"
 #include "delay.h"
 
-static uint16_t xdata Key_value = 0x000;
+static uint16_t data Key_value = 0x000;
 
-static uint8_t xdata s1Key_dat = 0x00;
-static uint16_t xdata s1Key_cnt = 0x00;
-static uint16_t xdata s1Key_long_cnt = 0x00;
-static uint8_t xdata s2Key_dat = 0x00;
-static uint16_t xdata s2Key_cnt = 0x00;
-static uint16_t xdata s2Key_long_cnt = 0x00;
-static uint8_t xdata s3Key_dat = 0x00;
-static uint16_t xdata s3Key_cnt = 0x00;
-static uint16_t xdata s3Key_long_cnt = 0x00;
-static uint8_t xdata s4Key_dat = 0x00;
-static uint16_t xdata s4Key_cnt = 0x00;
-static uint16_t xdata s4Key_long_cnt = 0x00;
-static uint8_t xdata s1Key_press_cnt = 0;
-static uint8_t xdata s2Key_press_cnt = 0;
-static uint8_t xdata s3Key_press_cnt = 0;
-static uint8_t xdata s4Key_press_cnt = 0;
+static uint8_t data s1Key_dat = 0x00;
+static uint16_t data s1Key_cnt = 0x00;
+static uint16_t data s1Key_long_cnt = 0x00;
+static uint8_t data s2Key_dat = 0x00;
+static uint16_t data s2Key_cnt = 0x00;
+static uint16_t data s2Key_long_cnt = 0x00;
+static uint8_t data s3Key_dat = 0x00;
+static uint16_t data s3Key_cnt = 0x00;
+static uint16_t data s3Key_long_cnt = 0x00;
+static uint8_t data s4Key_dat = 0x00;
+static uint16_t data s4Key_cnt = 0x00;
+static uint16_t data s4Key_long_cnt = 0x00;
+static uint8_t data s1Key_press_cnt = 0;
+static uint8_t data s2Key_press_cnt = 0;
+static uint8_t data s3Key_press_cnt = 0;
+static uint8_t data s4Key_press_cnt = 0;
 static void SeparateKey_Hook()
 {
-    static xdata uint8_t cnt_5ms=0;
+    static data uint8_t cnt_5ms=0;
     static bit s1Key_press = 0;
     static bit s2Key_press = 0;
     static bit s3Key_press = 0;
@@ -86,7 +86,7 @@ void SeparateKey_Init()
     delay_add_hook(SeparateKey_Hook);
 }
 
-bit SeparateKey_GetValue(uint16_t xdata *value)
+bit SeparateKey_GetValue(uint16_t *value)
 {
     if(Key_value)
     {

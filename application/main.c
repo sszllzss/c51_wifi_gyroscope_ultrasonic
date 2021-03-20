@@ -10,11 +10,11 @@
 #include "separate_key.h"
 int main()
 {
-    uint16_t xdata Key_value;
-    uint16_t xdata len_cnt = 0;
+    uint16_t Key_value;
+    uint16_t len_cnt = 0;
     double distance = 0;
-    uint8_t xdata  pwm=128;
-    uint16_t xdata i;
+    uint8_t  pwm=128;
+    uint16_t i;
     SysInit();
     U_Init();
     InitMPU6050();
