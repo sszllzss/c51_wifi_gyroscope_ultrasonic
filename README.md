@@ -47,6 +47,8 @@
 ### 硬件连接图
 ![](doc/img/ljt.png)
 
+
+![](doc/img/gpiolj.png)
 ## 配置ESP-01/ESP-01S模块波特率（出厂默认115200）
 - 连接ESP模块到TTL-USB模块（注意：ESP-01S可以不需要把RTS和CH_PD接到3.3V上）
 
