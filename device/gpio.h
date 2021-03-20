@@ -30,6 +30,9 @@
 
 
 uint8_t	GPIO_Inilize(uint8_t GPIO, uint8_t Pin,uint8_t	Mode);
-
+bit	GPIO_ReadPin(uint8_t GPIO, uint8_t pin);
+uint8_t	GPIO_Read(uint8_t GPIO);
+void GPIO_WritePin(uint8_t GPIO, uint8_t pin,bit dat);
+void GPIO_Write(uint8_t GPIO,uint8_t dat);
 
 #endif

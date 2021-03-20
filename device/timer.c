@@ -1,10 +1,10 @@
 #include	"timer.h"
 
-static timer_interrupt_cb_t timer0_int_cb = NULL;
-static timer_interrupt_cb_t timer1_int_cb = NULL;
-static timer_interrupt_cb_t timer2_int_cb = NULL;
-static timer_interrupt_cb_t timer3_int_cb = NULL;
-static timer_interrupt_cb_t timer4_int_cb = NULL;
+static timer_interrupt_cb_t xdata timer0_int_cb = NULL;
+static timer_interrupt_cb_t xdata timer1_int_cb = NULL;
+static timer_interrupt_cb_t xdata timer2_int_cb = NULL;
+static timer_interrupt_cb_t xdata timer3_int_cb = NULL;
+static timer_interrupt_cb_t xdata timer4_int_cb = NULL;
 /********************* Timer0ÖÐ¶Ïº¯Êý************************/
 void timer0_int (void) interrupt TIMER0_VECTOR
 {

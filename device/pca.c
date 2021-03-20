@@ -1,22 +1,22 @@
 
 #include	"pca.h"
-
+#include "gpio.h"
 #ifdef USING_PCA0
-bit		B_Capture0;
+
 uint8_t	xdata	PCA0_mode;
 uint16_t xdata	CCAP0_tmp,PCA_Timer0;
 uint16_t xdata	PWM0_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
 static pca_interrupt_cb_t PCA0_Callback=NULL;
 #endif
 #ifdef USING_PCA1
-bit		B_Capture1;
+
 uint8_t xdata PCA1_mode;
 uint16_t xdata CCAP1_tmp,PCA_Timer1;
 uint16_t xdata PWM1_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
 static pca_interrupt_cb_t PCA1_Callback=NULL;
 #endif
 #ifdef USING_PCA2
-bit		B_Capture2;
+
 uint8_t xdata PCA2_mode;
 uint16_t xdata CCAP2_tmp,PCA_Timer2;
 uint16_t xdata PWM2_low;	//PWM输出低电平的PCA时钟脉冲个数, 用户层不可见。
@@ -127,12 +127,23 @@ void	PCA_Init(uint8_t PCA_id, PCA_InitTypeDef *PCAx)
 		PCA_PWM0  = (PCA_PWM0 & ~(3<<6)) | PCAx->PCA_PWM_Wide;	//PWM宽度
 
 		PCA_Timer0 = PCAx->PCA_Value;
-		B_Capture0 = 0;
+		
 		PCA0_mode = PCAx->PCA_Mode;
 		CCAP0_tmp = PCA_Timer0;
 		CCAP0L = (uint8_t)CCAP0_tmp;			//将影射寄存器写入捕获寄存器，先写CCAP0L
 		CCAP0H = (uint8_t)(CCAP0_tmp >> 8);	//后写CCAP0H
         PCA0_Callback = PCAx->PCA_Callback;
+        if(PCAx->PCA_Mode==PCA_Mode_PWM || PCAx->PCA_Mode==PCA_Mode_HighPulseOutput){
+            if(PCAx->PCA_IoUse == PCA_P12_P11_P10_P37) GPIO_Inilize(GPIO_P1,GPIO_Pin_1, GPIO_OUT_PP);
+            else if(PCAx->PCA_IoUse == PCA_P34_P35_P36_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_5, GPIO_OUT_PP);
+            else if(PCAx->PCA_IoUse == PCA_P24_P25_P26_P27) GPIO_Inilize(GPIO_P2,GPIO_Pin_5, GPIO_OUT_PP);
+            
+        }
+        else if(PCAx->PCA_Mode==PCA_Mode_Capture){
+            if(PCAx->PCA_IoUse == PCA_P12_P11_P10_P37) GPIO_Inilize(GPIO_P1,GPIO_Pin_1, GPIO_HighZ);
+            else if(PCAx->PCA_IoUse == PCA_P34_P35_P36_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_5, GPIO_HighZ);
+            else if(PCAx->PCA_IoUse == PCA_P24_P25_P26_P27) GPIO_Inilize(GPIO_P2,GPIO_Pin_5, GPIO_HighZ);
+        }
         return;
 	}
     #endif
@@ -143,12 +154,23 @@ void	PCA_Init(uint8_t PCA_id, PCA_InitTypeDef *PCAx)
 		PCA_PWM1  = (PCA_PWM1 & ~(3<<6)) | PCAx->PCA_PWM_Wide;
 
 		PCA_Timer1 = PCAx->PCA_Value;
-		B_Capture1 = 0;
+		
 		PCA1_mode = PCAx->PCA_Mode;
 		CCAP1_tmp = PCA_Timer1;
 		CCAP1L = (uint8_t)CCAP1_tmp;			//将影射寄存器写入捕获寄存器，先写CCAP0L
 		CCAP1H = (uint8_t)(CCAP1_tmp >> 8);	//后写CCAP0H
         PCA1_Callback = PCAx->PCA_Callback;
+        if(PCAx->PCA_Mode==PCA_Mode_PWM || PCAx->PCA_Mode==PCA_Mode_HighPulseOutput){
+            if(PCAx->PCA_IoUse == PCA_P12_P11_P10_P37) GPIO_Inilize(GPIO_P1,GPIO_Pin_0, GPIO_OUT_PP);
+            else if(PCAx->PCA_IoUse == PCA_P34_P35_P36_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_6, GPIO_OUT_PP);
+            else if(PCAx->PCA_IoUse == PCA_P24_P25_P26_P27) GPIO_Inilize(GPIO_P2,GPIO_Pin_6, GPIO_OUT_PP);
+            
+        }
+        else if(PCAx->PCA_Mode==PCA_Mode_Capture){
+            if(PCAx->PCA_IoUse == PCA_P12_P11_P10_P37) GPIO_Inilize(GPIO_P1,GPIO_Pin_0, GPIO_HighZ);
+            else if(PCAx->PCA_IoUse == PCA_P34_P35_P36_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_6, GPIO_HighZ);
+            else if(PCAx->PCA_IoUse == PCA_P24_P25_P26_P27) GPIO_Inilize(GPIO_P2,GPIO_Pin_6, GPIO_HighZ);
+        }
         return;
 	}
     #endif
@@ -159,12 +181,23 @@ void	PCA_Init(uint8_t PCA_id, PCA_InitTypeDef *PCAx)
 		PCA_PWM2  = (PCA_PWM2 & ~(3<<6)) | PCAx->PCA_PWM_Wide;
 
 		PCA_Timer2 = PCAx->PCA_Value;
-		B_Capture2 = 0;
+		
 		PCA2_mode = PCAx->PCA_Mode;
 		CCAP2_tmp = PCA_Timer2;
 		CCAP2L = (uint8_t)CCAP2_tmp;			//将影射寄存器写入捕获寄存器，先写CCAP0L
 		CCAP2H = (uint8_t)(CCAP2_tmp >> 8);	//后写CCAP0H
         PCA2_Callback = PCAx->PCA_Callback;
+        if(PCAx->PCA_Mode==PCA_Mode_PWM || PCAx->PCA_Mode==PCA_Mode_HighPulseOutput){
+            if(PCAx->PCA_IoUse == PCA_P12_P11_P10_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_7, GPIO_OUT_PP);
+            else if(PCAx->PCA_IoUse == PCA_P34_P35_P36_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_7, GPIO_OUT_PP);
+            else if(PCAx->PCA_IoUse == PCA_P24_P25_P26_P27) GPIO_Inilize(GPIO_P2,GPIO_Pin_7, GPIO_OUT_PP);
+            
+        }
+        else if(PCAx->PCA_Mode==PCA_Mode_Capture){
+            if(PCAx->PCA_IoUse == PCA_P12_P11_P10_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_7, GPIO_HighZ);
+            else if(PCAx->PCA_IoUse == PCA_P34_P35_P36_P37) GPIO_Inilize(GPIO_P3,GPIO_Pin_7, GPIO_HighZ);
+            else if(PCAx->PCA_IoUse == PCA_P24_P25_P26_P27) GPIO_Inilize(GPIO_P2,GPIO_Pin_7, GPIO_HighZ);
+        }
         return;
 	}
     #endif

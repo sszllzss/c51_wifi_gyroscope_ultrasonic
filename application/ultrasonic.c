@@ -40,7 +40,7 @@ static void pca_interrupt_cb(uint8_t PCA_id,uint16_t value)
 }
 static void U_Hook()//1ms
 {
-    static uint8_t cont_timerout = 0;
+    static uint8_t xdata cont_timerout = 0;
     cont_timerout++;
     if(cont_timerout==70)
     {
@@ -56,7 +56,7 @@ static void U_Hook()//1ms
 }
 static void Pca_Init(void)
 {
-    PCA_InitTypeDef PCA_def;
+    PCA_InitTypeDef xdata PCA_def;
     PCA_def.PCA_IoUse = PCA_P34_P35_P36_P37;
     PCA_def.PCA_Clock = PCA_Clock_1T;
     PCA_def.PCA_Mode = PCA_Mode_Capture;

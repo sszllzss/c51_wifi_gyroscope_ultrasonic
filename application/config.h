@@ -20,6 +20,9 @@
 #define DEBUG_PRINTF_UART1_SW_P16_P17
 
 
+//#define USING_24CXX
+#define USING_MPU6050
+
 #define DELAY_TIMER_HOOK_SIZE 4
 
 #define USING_UART1//¿ªÆô´®¿Ú1

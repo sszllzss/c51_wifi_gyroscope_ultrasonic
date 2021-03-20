@@ -3,9 +3,9 @@
 
 
 static delay_timer_hook_t xdata timer_hook[DELAY_TIMER_HOOK_SIZE];
-static uint8_t timer_hook_pointer = 0;
-static uint32_t delay_ms_tick_cnt = 0;
-static uint16_t delay_TIM_Value = 0;
+static uint8_t xdata timer_hook_pointer = 0;
+static uint32_t xdata delay_ms_tick_cnt = 0;
+static uint16_t xdata delay_TIM_Value = 0;
 //========================================================================
 // º¯Êý: void  delay_ms(uint8_t ms)
 // ÃèÊö: ÑÓÊ±º¯Êý¡£

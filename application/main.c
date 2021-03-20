@@ -5,25 +5,102 @@
 #include "usart.h"
 #include "stdio.h"
 #include "ultrasonic.h"
-
-
+#include "mpu6050.h"
+#include "led.h"
+#include "separate_key.h"
 int main()
 {
+    uint16_t xdata Key_value;
+    uint16_t xdata len_cnt = 0;
     double distance = 0;
-    uint8_t  pwm=128;
-    uint16_t i;
+    uint8_t xdata  pwm=128;
+    uint16_t xdata i;
     SysInit();
     U_Init();
-    GPIO_Inilize(GPIO_P5,GPIO_Pin_5,GPIO_OUT_PP);
+    InitMPU6050();
+    Led_init();
+    SeparateKey_Init();
+    Led_Start(10,0,len_cnt);
     P55=0;
     while(1)
     {
         distance = U_GetDistance();
-        P55=!P55;
+        
         printf("distance:%f\r\n",distance);
-        for(i=0;i<1000;i++)
+        
+        //mpu6050_test();
+        if(SeparateKey_GetValue(&Key_value))
+        {
+            if(((Key_value>>KEY_TYPE_CLICK)&0x0F))
+            {
+                if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S1)
+                {
+                    printf("单击S1\r\n");
+                }
+                else if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S2)
+                {
+                    printf("单击S2\r\n");
+                }
+                else if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S3)
+                {
+                    printf("单击S3\r\n");
+                }
+                else if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S4)
+                {
+                    printf("单击S4\r\n");
+                }
+            }
+            else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F))
+            {
+                if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S1)
+                {
+                   printf("双击S1\r\n"); 
+                }
+                else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S2)
+                {
+                    printf("双击S2\r\n"); 
+                }
+                else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S3)
+                {
+                    printf("双击S3\r\n"); 
+                }
+                else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S4)
+                {
+                    printf("双击S4\r\n"); 
+                }
+            }
+            else if(((Key_value>>KEY_TYPE_LONG)&0x0F))
+            {
+                if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S1)
+                {
+                    printf("长按S1\r\n"); 
+                }
+                else if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S2)
+                {
+                    printf("长按S2\r\n");
+                }
+                else if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S3)
+                {
+                    printf("长按S3\r\n");
+                }
+                else if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S4)
+                {
+                    printf("长按S4\r\n",4);
+                }
+            }
+        }
+        
+        for(i=0;i<3000;i++)
         {
             delay_us(800);
+            if(i%200 == 0)
+            {
+                len_cnt+=1;
+                if(len_cnt>10)
+                    len_cnt = 0;
+                Led_Update(0,len_cnt);
+
+            }
         }
         if(UARTx_ReadRxLen(USART1) > 0)
         {

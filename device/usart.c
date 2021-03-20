@@ -1,7 +1,7 @@
 
 #include "usart.h"
 #include	"delay.h"
-
+#include	"gpio.h"
 
 
 
@@ -158,6 +158,9 @@ int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 		P_SW1 = (P_SW1 & 0x3f) | (COMx->UART_P_SW & 0xc0);	//切换IO
 		if(COMx->UART_RXD_TXD_Short == ENABLE)	PCON2 |=  (1<<4);	//内部短路RXD与TXD, 做中继, ENABLE,DISABLE
 		else									PCON2 &= ~(1<<4);
+        if(COMx->UART_P_SW == UART1_SW_P30_P31){GPIO_Inilize(GPIO_P3,GPIO_Pin_0, GPIO_PullUp);GPIO_Inilize(GPIO_P3,GPIO_Pin_1,GPIO_OUT_PP);}
+        else if(COMx->UART_P_SW == UART1_SW_P36_P37){GPIO_Inilize(GPIO_P3,GPIO_Pin_6, GPIO_PullUp);GPIO_Inilize(GPIO_P3,GPIO_Pin_7,GPIO_OUT_PP);}
+        else if(COMx->UART_P_SW == UART1_SW_P16_P17){GPIO_Inilize(GPIO_P1,GPIO_Pin_6, GPIO_PullUp);GPIO_Inilize(GPIO_P1,GPIO_Pin_7,GPIO_OUT_PP);}
 		return	0;
 	}
 #endif
@@ -194,6 +197,10 @@ int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 		if(COMx->UART_RxEnable == ENABLE)	S2CON |=  (1<<4);	//允许接收
 		else								S2CON &= ~(1<<4);	//禁止接收
 		P_SW2 = (P_SW2 & ~1) | (COMx->UART_P_SW & 0x01);	//切换IO
+        if(COMx->UART_P_SW == UART2_SW_P10_P11){GPIO_Inilize(GPIO_P1,GPIO_Pin_0, GPIO_PullUp);GPIO_Inilize(GPIO_P1,GPIO_Pin_1,GPIO_OUT_PP);}
+        else if(COMx->UART_P_SW == UART2_SW_P46_P47){GPIO_Inilize(GPIO_P4,GPIO_Pin_6, GPIO_PullUp);GPIO_Inilize(GPIO_P4,GPIO_Pin_7,GPIO_OUT_PP);}
+        
+        return 0;
 	}
 #endif
 #ifdef USING_UART3
@@ -247,6 +254,9 @@ int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 		if(COMx->UART_RxEnable == ENABLE)	S3CON |=  (1<<4);	//允许接收
 		else								S3CON &= ~(1<<4);	//禁止接收
 		P_SW2 = (P_SW2 & ~(1<<1)) | ((COMx->UART_P_SW & 0x01)<<1);	//切换IO
+        if(COMx->UART_P_SW == UART3_SW_P00_P01){GPIO_Inilize(GPIO_P0,GPIO_Pin_0, GPIO_PullUp);GPIO_Inilize(GPIO_P0,GPIO_Pin_1,GPIO_OUT_PP);}
+        else if(COMx->UART_P_SW == UART3_SW_P56_P51){GPIO_Inilize(GPIO_P5,GPIO_Pin_6, GPIO_PullUp);GPIO_Inilize(GPIO_P5,GPIO_Pin_7,GPIO_OUT_PP);}
+        return 0;
 	}
 #endif
 #ifdef USING_UART4
@@ -299,9 +309,12 @@ int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 		if(COMx->UART_RxEnable == ENABLE)	S4CON |=  (1<<4);	//允许接收
 		else								S4CON &= ~(1<<4);	//禁止接收
 		P_SW2 = (P_SW2 & ~(1<<2)) | ((COMx->UART_P_SW & 0x01)<<2);	//切换IO
+        if(COMx->UART_P_SW == UART4_SW_P02_P03){GPIO_Inilize(GPIO_P0,GPIO_Pin_2, GPIO_PullUp);GPIO_Inilize(GPIO_P0,GPIO_Pin_3,GPIO_OUT_PP);}
+        else if(COMx->UART_P_SW == UART4_SW_P52_P53){GPIO_Inilize(GPIO_P5,GPIO_Pin_2, GPIO_PullUp);GPIO_Inilize(GPIO_P5,GPIO_Pin_3,GPIO_OUT_PP);}
+        return 0;
 	}
 #endif
-    return 0;
+    return 2;
 }
 
 
