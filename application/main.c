@@ -28,7 +28,7 @@ int main()
         
         printf("distance:%f\r\n",distance);
         
-        //mpu6050_test();
+        mpu6050_test();
         if(SeparateKey_GetValue(&Key_value))
         {
             if(((Key_value>>KEY_TYPE_CLICK)&0x0F))

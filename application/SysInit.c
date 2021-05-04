@@ -15,7 +15,7 @@ static void GPIO_Init(void)
 }
 static void Uart_Init(void)
 {
-    COMx_InitDefine xdata init_define;
+    COMx_InitDefine init_define;
 #ifdef USING_UART1
     init_define.UART_Mode = UART_8bit_BRTx;                                                                   
     init_define.UART_BRT_Use = BRT_Timer2;

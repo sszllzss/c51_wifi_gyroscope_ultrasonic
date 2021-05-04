@@ -26,7 +26,7 @@ static uint8_t 	xdata RX4_Buffer[COM_RX4_Lenth];	//Ω” ’ª∫≥Â
 static uint8_t xdata  uart_init = 0;
 
 
-static COMx_Define xdata Uartx_config[]=
+static COMx_Define Uartx_config[]=
 {
     #ifdef USING_UART1
         {1,RX1_Buffer,TX1_Buffer,COM_RX1_Lenth,COM_TX1_Lenth,0,0,0,0,0,0,0},
@@ -44,7 +44,7 @@ static COMx_Define xdata Uartx_config[]=
 
 static void USART_Hook()
 {
-    uint8_t data i;
+    uint8_t i;
     for(i=0;i<sizeof(Uartx_config)/sizeof(Uartx_config[0]);i++)
     {
         if(Uartx_config[i].RX_TimeOut > 0)

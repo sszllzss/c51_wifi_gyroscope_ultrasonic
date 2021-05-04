@@ -125,7 +125,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>STCMON51</Key>
-          <Name>-S26 -B115200 -O0</Name>
+          <Name>-S15 -B115200 -O0</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
       <Breakpoint/>
@@ -133,22 +133,12 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>s1Key_long</ItemText>
+          <ItemText>u_ago</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>s1Key_long_cnt</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>s1Key_dat</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>s1Key_press_cnt</ItemText>
+          <ItemText>(value-u_ago)/(MAIN_Fosc/1000)</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

@@ -57,7 +57,7 @@
 [购买链接](https://detail.tmall.com/item.htm?id=525204252260&ali_refid=a3_430582_1006:1104520036:N:cTt8VXogGknfV8yQ5Cjk3g==:5d74647c728497da47d886380f9a88c6&ali_trackid=1_5d74647c728497da47d886380f9a88c6&spm=a230r.1.14.1&skuId=3947839671633)
 
 ```
-TTL模块->ESP模块
+TTL模块->ESP模块 
   3V3 -> VCC
   GND -> GND
   RXD -> TXD

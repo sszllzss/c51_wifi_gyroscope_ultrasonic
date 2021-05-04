@@ -22,7 +22,7 @@ static uint8_t data s3Key_press_cnt = 0;
 static uint8_t data s4Key_press_cnt = 0;
 static void SeparateKey_Hook()
 {
-    static data uint8_t cnt_5ms=0;
+    static uint8_t cnt_5ms=0;
     static bit s1Key_press = 0;
     static bit s2Key_press = 0;
     static bit s3Key_press = 0;

@@ -64,7 +64,7 @@ uint32_t delay_get_tick()
 }
 static void delay_Timerout_Callback()//1ms进入一次中断
 {
-    uint8_t data i;
+    uint8_t i;
     delay_ms_tick_cnt++;
     if(timer_hook_pointer>0)
     {

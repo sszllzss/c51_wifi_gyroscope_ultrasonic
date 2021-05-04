@@ -14,6 +14,6 @@ void I2CSendByte(unsigned char sendbyte);
 unsigned char I2CReceiveByte(void);
 bit I2C_WriteI2C(uint8_t SlaveAddress,uint8_t REG_Address,uint8_t REG_data);
 bit I2C_ReadI2C(uint8_t SlaveAddress,uint8_t REG_Address,uint8_t *dat);
-
+void I2Cdelay_while(uint8_t us);
 void I2C_Init();
 #endif

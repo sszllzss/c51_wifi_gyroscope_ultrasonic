@@ -21,7 +21,7 @@
 bit   RW24XX(unsigned char *DataBuff,unsigned char ByteQuantity,unsigned int Address,
                      unsigned char ControlByte,enum eepromtype EepromType)
 {
-    unsigned char data j,i=ERRORCOUNT;
+    unsigned char j,i=ERRORCOUNT;
     bit      errorflag=1;
     while(i--)
     {

@@ -6,6 +6,6 @@
 
 void  InitMPU6050(void);													//≥ı ºªØMPU6050
 int mpu6050_GetData(uint8_t REG_Address);
-int mpu6050_GetTemp(void);
+double mpu6050_GetTemp(void);
 void mpu6050_test(void);
 #endif
