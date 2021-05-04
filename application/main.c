@@ -17,6 +17,7 @@ int main()
     uint16_t i;
     SysInit();
     U_Init();
+    
     InitMPU6050();
     Led_init();
     SeparateKey_Init();
@@ -35,57 +36,57 @@ int main()
             {
                 if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S1)
                 {
-                    printf("µ¥»÷S1\r\n");
+                    printf("ï¿½ï¿½ï¿½ï¿½S1\r\n");
                 }
                 else if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S2)
                 {
-                    printf("µ¥»÷S2\r\n");
+                    printf("ï¿½ï¿½ï¿½ï¿½S2\r\n");
                 }
                 else if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S3)
                 {
-                    printf("µ¥»÷S3\r\n");
+                    printf("ï¿½ï¿½ï¿½ï¿½S3\r\n");
                 }
                 else if(((Key_value>>KEY_TYPE_CLICK)&0x0F)==KEY_VALUE_S4)
                 {
-                    printf("µ¥»÷S4\r\n");
+                    printf("ï¿½ï¿½ï¿½ï¿½S4\r\n");
                 }
             }
             else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F))
             {
                 if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S1)
                 {
-                   printf("Ë«»÷S1\r\n"); 
+                   printf("Ë«ï¿½ï¿½S1\r\n"); 
                 }
                 else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S2)
                 {
-                    printf("Ë«»÷S2\r\n"); 
+                    printf("Ë«ï¿½ï¿½S2\r\n"); 
                 }
                 else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S3)
                 {
-                    printf("Ë«»÷S3\r\n"); 
+                    printf("Ë«ï¿½ï¿½S3\r\n"); 
                 }
                 else if(((Key_value>>KEY_TYPEDOUBLE)&0x0F)==KEY_VALUE_S4)
                 {
-                    printf("Ë«»÷S4\r\n"); 
+                    printf("Ë«ï¿½ï¿½S4\r\n"); 
                 }
             }
             else if(((Key_value>>KEY_TYPE_LONG)&0x0F))
             {
                 if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S1)
                 {
-                    printf("³¤°´S1\r\n"); 
+                    printf("ï¿½ï¿½ï¿½ï¿½S1\r\n"); 
                 }
                 else if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S2)
                 {
-                    printf("³¤°´S2\r\n");
+                    printf("ï¿½ï¿½ï¿½ï¿½S2\r\n");
                 }
                 else if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S3)
                 {
-                    printf("³¤°´S3\r\n");
+                    printf("ï¿½ï¿½ï¿½ï¿½S3\r\n");
                 }
                 else if(((Key_value>>KEY_TYPE_LONG)&0x0F)==KEY_VALUE_S4)
                 {
-                    printf("³¤°´S4\r\n",4);
+                    printf("ï¿½ï¿½ï¿½ï¿½S4\r\n",4);
                 }
             }
         }
