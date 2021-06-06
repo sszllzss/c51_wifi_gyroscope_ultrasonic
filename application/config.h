@@ -20,6 +20,9 @@
 #define DEBUG_PRINTF_UART1_SW_P16_P17
 
 
+#define AT_UART USART2
+
+
 //#define USING_24CXX
 #define USING_MPU6050
 

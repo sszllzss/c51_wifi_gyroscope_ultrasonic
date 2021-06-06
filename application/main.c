@@ -8,6 +8,7 @@
 #include "mpu6050.h"
 #include "led.h"
 #include "separate_key.h"
+
 int main()
 {
     uint16_t Key_value;
@@ -22,14 +23,15 @@ int main()
     Led_init();
     SeparateKey_Init();
     Led_Start(10,0,len_cnt);
+    at_esp8266_init();
     P55=0;
     while(1)
     {
-        distance = U_GetDistance();
-        
-        printf("distance:%f\r\n",distance);
-        
-        mpu6050_test();
+//        distance = U_GetDistance();
+//        
+//        printf("distance:%f\r\n",distance);
+//        
+//        mpu6050_test();
         if(SeparateKey_GetValue(&Key_value))
         {
             if(((Key_value>>KEY_TYPE_CLICK)&0x0F))
@@ -91,18 +93,19 @@ int main()
             }
         }
         
-        for(i=0;i<3000;i++)
-        {
-            delay_us(800);
-            if(i%200 == 0)
-            {
-                len_cnt+=1;
-                if(len_cnt>10)
-                    len_cnt = 0;
-                Led_Update(0,len_cnt);
+//        for(i=0;i<3000;i++)
+//        {
+//            delay_us(800);
+//            if(i%200 == 0)
+//            {
+//                len_cnt+=1;
+//                if(len_cnt>10)
+//                    len_cnt = 0;
+//                Led_Update(0,len_cnt);
 
-            }
-        }
+//            }
+//        }
+        delay_us(500);
         if(UARTx_ReadRxLen(USART1) > 0)
         {
             int8_t len = UARTx_ReadRxLen(USART1);

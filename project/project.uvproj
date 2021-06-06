@@ -348,7 +348,7 @@
             <DataOverlaying>1</DataOverlaying>
             <OverlayString></OverlayString>
             <MiscControls></MiscControls>
-            <DisableWarningNumbers></DisableWarningNumbers>
+            <DisableWarningNumbers>16</DisableWarningNumbers>
             <LinkerCmdFile></LinkerCmdFile>
             <Assign></Assign>
             <ReserveString></ReserveString>
@@ -460,6 +460,11 @@
               <FileName>separate_key.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\device\separate_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>at.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\device\at.c</FilePath>
             </File>
           </Files>
         </Group>

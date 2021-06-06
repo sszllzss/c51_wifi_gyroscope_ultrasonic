@@ -47,10 +47,10 @@ static void USART_Hook()
     uint8_t i;
     for(i=0;i<sizeof(Uartx_config)/sizeof(Uartx_config[0]);i++)
     {
-        if(Uartx_config[i].RX_TimeOut > 0)
+        if(Uartx_config[i].RX_TimeOut_Cnt > 0)
         {
-            Uartx_config[i].RX_TimeOut--;
-            if(Uartx_config[i].RX_TimeOut==0)
+            Uartx_config[i].RX_TimeOut_Cnt--;
+            if(Uartx_config[i].RX_TimeOut_Cnt==0)
             {
                 if(Uartx_config[i].timer_out_cb)
                 {
@@ -67,7 +67,7 @@ void USART_Set_rx_timer_out_cb(uint8_t UARTx, usart_rx_timer_out_cb_t timer_out_
 }
 int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx)
 {
-	uint8_t	i;
+	uint16_t	i;
 	uint32_t	j;
     
     Uartx_config[UARTx].TX_read = 0;
@@ -390,7 +390,7 @@ void UARTx_writebuff(enum USARTx com, uint8_t dat)	//Ð´Èë·¢ËÍ»º³å£¬Ö¸Õë+1
 	if(Uartx_config[com].id == 4)	TX4_write2buff(dat);
     #endif
 }
-uint8_t UARTx_ReadRxLen(enum USARTx com)
+uint16_t UARTx_ReadRxLen(enum USARTx com)
 {
     return Uartx_config[com].RX_RxCnt;
 }
@@ -419,9 +419,9 @@ int8_t UARTx_CheckRxChar(enum USARTx com,uint8_t *dat)//²¢²»´Ó¶ÓÁÐÀïÈ¡³öÊý¾ÝÖ»ÊÇ
 }
 
 
-int8_t UARTx_CheckPosRxBuff(enum USARTx com,uint8_t pos,uint8_t *buff,uint8_t len)//²¢²»´Ó¶ÓÁÐÀïÈ¡³öÊý¾ÝÖ»ÊÇ²é¿´Ò»ÏÂÊý¾Ý
+int8_t UARTx_CheckPosRxBuff(enum USARTx com,uint8_t pos,uint8_t *buff,uint16_t len)//²¢²»´Ó¶ÓÁÐÀïÈ¡³öÊý¾ÝÖ»ÊÇ²é¿´Ò»ÏÂÊý¾Ý
 {
-    uint8_t i=0;
+    uint16_t i=0;
 
     if(Uartx_config[com].RX_RxCnt <= 0 || len <= 0 || (pos+len) > Uartx_config[com].RX_RxCnt)
     {
@@ -460,9 +460,9 @@ int8_t UARTx_CheckPosRxBuff(enum USARTx com,uint8_t pos,uint8_t *buff,uint8_t le
     }
     return 0;  
 }
-int8_t UARTx_CheckRxBuff(enum USARTx com,uint8_t *buff,uint8_t len)//²¢²»´Ó¶ÓÁÐÀïÈ¡³öÊý¾ÝÖ»ÊÇ²é¿´Ò»ÏÂÊý¾Ý
+int8_t UARTx_CheckRxBuff(enum USARTx com,uint8_t *buff,uint16_t len)//²¢²»´Ó¶ÓÁÐÀïÈ¡³öÊý¾ÝÖ»ÊÇ²é¿´Ò»ÏÂÊý¾Ý
 {
-    uint8_t i=0;
+    uint16_t i=0;
     if(Uartx_config[com].RX_RxCnt <=len)
     {
         for(i=0;i<len;i++)
@@ -473,7 +473,7 @@ int8_t UARTx_CheckRxBuff(enum USARTx com,uint8_t *buff,uint8_t len)//²¢²»´Ó¶ÓÁÐÀ
     }
     return -1;
 }
-int8_t UARTx_RemoveRxBuff(enum USARTx com,uint8_t len)
+int8_t UARTx_RemoveRxBuff(enum USARTx com,uint16_t len)
 {
     if(Uartx_config[com].RX_RxCnt <=len)
     {
@@ -502,7 +502,7 @@ void UART1_int (void) interrupt UART1_VECTOR
 			RX1_Buffer[Uartx_config[USART1].RX_Rear] = SBUF;
             Uartx_config[USART1].RX_RxCnt++;
             Uartx_config[USART1].RX_Rear =(Uartx_config[USART1].RX_Rear +1) % COM_RX1_Lenth;
-			Uartx_config[USART1].RX_TimeOut = Uartx_config[USART1].RX_TimeOut;;
+			Uartx_config[USART1].RX_TimeOut_Cnt = Uartx_config[USART1].RX_TimeOut;;
 		}
         else if(Uartx_config[USART1].timer_out_cb)
         {
@@ -523,7 +523,7 @@ void UART1_int (void) interrupt UART1_VECTOR
 }
 #endif
 #ifdef USING_UART2
-/********************* UART2ÖÐ¶Ïº¯Êý************************/
+/********************* UART2ÖÐ¶Ïº¯Êý ************************/
 void UART2_int (void) interrupt UART2_VECTOR
 {
 	if((S2CON & 1) != 0)
@@ -534,7 +534,7 @@ void UART2_int (void) interrupt UART2_VECTOR
 			RX2_Buffer[Uartx_config[USART2].RX_Rear] = S2BUF;
             Uartx_config[USART2].RX_RxCnt++;
             Uartx_config[USART2].RX_Rear =(Uartx_config[USART2].RX_Rear +1) % COM_RX2_Lenth;
-			Uartx_config[USART2].RX_TimeOut = Uartx_config[USART2].RX_TimeOut;
+			Uartx_config[USART2].RX_TimeOut_Cnt = Uartx_config[USART2].RX_TimeOut;
 		}
         else if(Uartx_config[USART2].timer_out_cb)
         {
@@ -567,7 +567,7 @@ void UART3_int (void) interrupt UART3_VECTOR
 			RX3_Buffer[Uartx_config[USART3].RX_Rear] = S3BUF;
             Uartx_config[USART3].RX_RxCnt++;
             Uartx_config[USART3].RX_Rear =(Uartx_config[USART3].RX_Rear +1) % COM_RX3_Lenth;
-			Uartx_config[USART3].RX_TimeOut = Uartx_config[USART3].RX_TimeOut;
+			Uartx_config[USART3].RX_TimeOut_Cnt = Uartx_config[USART3].RX_TimeOut;
 		}
         else if(Uartx_config[USART3].timer_out_cb)
         {
@@ -599,7 +599,7 @@ void UART4_int (void) interrupt UART4_VECTOR
 			RX4_Buffer[Uartx_config[USART4].RX_Rear] = S4BUF;
             Uartx_config[USART4].RX_RxCnt++;
             Uartx_config[USART4].RX_Rear =(Uartx_config[USART4].RX_Rear +1) % COM_RX4_Lenth;
-			Uartx_config[USART4].RX_TimeOut = Uartx_config[USART4].RX_TimeOut;
+			Uartx_config[USART4].RX_TimeOut_Cnt = Uartx_config[USART4].RX_TimeOut;
 		}
         else if(Uartx_config[USART4].timer_out_cb)
         {

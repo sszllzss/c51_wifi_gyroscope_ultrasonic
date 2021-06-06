@@ -53,15 +53,16 @@ typedef struct
 	uint8_t	id;				//串口号
     uint8_t * Rx_buff;
     uint8_t * Tx_buff;
-    uint8_t RX_BuffLen;//接收队列长度
-    uint8_t TX_BuffLen;//发送队列长度
-	uint8_t	TX_read;		//发送读指针
-	uint8_t	TX_write;		//发送写指针
+    uint16_t RX_BuffLen;//接收队列长度
+    uint16_t TX_BuffLen;//发送队列长度
+	uint16_t	TX_read;		//发送读指针
+	uint16_t	TX_write;		//发送写指针
 	uint8_t	B_TX_busy;		//忙标志
-    uint8_t RX_RxCnt;			//接收计数
-	uint8_t RX_Front;			//队头
-    uint8_t RX_Rear;			//队尾
-	uint8_t	RX_TimeOut;		//接收超时
+    uint16_t RX_RxCnt;			//接收计数
+	uint16_t RX_Front;			//队头
+    uint16_t RX_Rear;			//队尾
+	uint16_t	RX_TimeOut_Cnt;		//接收超时
+    uint16_t	RX_TimeOut;		//接收超时
     usart_rx_timer_out_cb_t timer_out_cb;//接收超时与缓存满回调
 } COMx_Define; 
 
@@ -83,15 +84,16 @@ typedef struct
 
 
 void USART_Set_rx_timer_out_cb(uint8_t UARTx, usart_rx_timer_out_cb_t timer_out_cb,uint8_t RX_TimeOut);//设置超时通知回调
+
 int8_t USART_Configuration(uint8_t UARTx, COMx_InitDefine *COMx);
 void UARTx_writebuff(enum USARTx com, uint8_t dat);	//写入发送缓冲，指针+1
 void PrintString(enum USARTx com, uint8_t *puts);
-uint8_t UARTx_ReadRxLen(enum USARTx com);//获取接收的大小
+uint16_t UARTx_ReadRxLen(enum USARTx com);//获取接收的大小
 int8_t UARTx_ReadRxChar(enum USARTx com,uint8_t *dat);//取出一个数据
 int8_t UARTx_CheckRxChar(enum USARTx com,uint8_t *dat);//查看一个数据 并不从队列里取出数据只是查看一下数据
-int8_t UARTx_CheckPosRxBuff(enum USARTx com,uint8_t pos,uint8_t *buff,uint8_t len);//查看指定地方的数据 //并不从队列里取出数据只是查看一下数据
-int8_t UARTx_CheckRxBuff(enum USARTx com,uint8_t *buff,uint8_t len);//查看数据 并不从队列里取出数据只是查看一下数据
-int8_t UARTx_RemoveRxBuff(enum USARTx com,uint8_t len);//移除数据
+int8_t UARTx_CheckPosRxBuff(enum USARTx com,uint8_t pos,uint8_t *buff,uint16_t len);//查看指定地方的数据 //并不从队列里取出数据只是查看一下数据
+int8_t UARTx_CheckRxBuff(enum USARTx com,uint8_t *buff,uint16_t len);//查看数据 并不从队列里取出数据只是查看一下数据
+int8_t UARTx_RemoveRxBuff(enum USARTx com,uint16_t len);//移除数据
 
 #endif
 
